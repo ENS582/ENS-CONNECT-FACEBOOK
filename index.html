@@ -1,260 +1,189 @@
 <!DOCTYPE html>
-<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ENS CONNECT - Email Login</title>
+<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ENS CONNECT - 20 Members Max</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 body{background:#f0f2f5;font-family:Helvetica,sans-serif}
-.login-bg{background:linear-gradient(135deg,#0866ff 0%,#00c6ff 100%);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:16px}
-.login-card{background:#fff;width:100%;max-width:400px;border-radius:12px;padding:24px;box-shadow:0 8px 32px #0003}
-.input{width:100%;padding:14px;border:1px solid #dddfe2;border-radius:6px;font-size:15px;margin:8px 0;outline:0}
-.input:focus{border-color:#0866ff;box-shadow:0 0 0 2px #e7f3ff}
-.btn{width:100%;padding:14px;border:0;border-radius:6px;font-weight:700;font-size:16px;cursor:pointer}
-.btn-blue{background:#0866ff;color:#fff}.btn-blue:active{background:#075eec}
-.btn-green{background:#42b72a;color:#fff;margin-top:16px}
-.divider{display:flex;align-items:center;gap:12px;margin:16px 0;color:#8a8a8a;font-size:13px}
-.divider::before,.divider::after{content:'';flex:1;height:1px;background:#dadde1}
-.header{background:#fff;display:flex;justify-content:space-between;padding:8px 12px;box-shadow:0 1px 2px #0002;position:sticky;top:0;z-index:100}
-.feed{max-width:600px;margin:0 auto;padding-bottom:80px}
-.card{background:#fff;border-radius:8px;margin:8px;box-shadow:0 1px 2px #0001;overflow:hidden}
-.av{width:40px;height:40px;border-radius:50%;background:#0866ff;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;overflow:hidden}
-.av img{width:100%;height:100%;object-fit:cover}
-.email-badge{background:#e7f3ff;color:#0866ff;font-size:11px;padding:2px 6px;border-radius:4px}
+.login-bg{background:linear-gradient(135deg,#0866ff,#00c6ff);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:16px}
+.login-card{background:#fff;width:100%;max-width:420px;border-radius:12px;padding:24px;box-shadow:0 8px 32px #0003}
+.input{width:100%;padding:12px;border:1px solid #dddfe2;border-radius:6px;font-size:14px;margin:6px 0;outline:0}
+.btn{width:100%;padding:12px;border:0;border-radius:6px;font-weight:700;font-size:14px;cursor:pointer}
+.btn-blue{background:#0866ff;color:#fff}.btn-green{background:#42b72a;color:#fff}
+.header{background:#fff;display:flex;justify-content:space-between;padding:8px 12px;box-shadow:0 1px 2px #0002;position:sticky;top:0;z-index:100;align-items:center}
+.card{background:#fff;border-radius:8px;margin:8px;box-shadow:0 1px 2px #0001;overflow:hidden;padding:12px}
+.av{width:40px;height:40px;border-radius:50%;background:#0866ff;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;overflow:hidden;flex-shrink:0}
+.badge{font-size:10px;padding:2px 6px;border-radius:4px;background:#e7f3ff;color:#0866ff}
 </style></head><body>
 
-<!-- LOGIN PAGE -->
 <div id="loginPage" class="login-bg">
 <div class="login-card">
-<div style="text-align:center;margin-bottom:20px">
-<div style="font-size:36px;font-weight:900;color:#0866ff">ens<span style="color:#000">CONNECT</span> <span style="font-size:12px;background:#0866ff;color:#fff;padding:2px 6px;border-radius:4px">EMAIL EDITION</span></div>
-<p style="color:#606770;margin-top:8px;font-size:14px">ENS 2026 • Login with university email</p>
+<div style="text-align:center;margin-bottom:16px">
+<div style="font-size:28px;font-weight:900;color:#0866ff">ens<span style="color:#000">CONNECT</span></div>
+<div style="font-size:11px;background:#0866ff;color:#fff;padding:3px 8px;border-radius:12px;display:inline-block;margin-top:4px">MAX 20 MEMBERS • INDIVIDUAL EMAIL</div>
+<p style="color:#606770;margin-top:8px;font-size:13px">Registered: <b id="countTop">0</b>/20 • Each with own email</p>
 </div>
 
 <div id="loginForm">
-<input id="email" class="input" type="email" placeholder="University Email (e.g. john@students.uonbi.ac.ke)" value="">
+<input id="email" class="input" type="email" placeholder="Your Individual Email">
 <input id="password" class="input" type="password" placeholder="Password">
-<button class="btn btn-blue" onclick="login()">Log In</button>
-<div style="text-align:center;margin:12px 0"><a href="#" onclick="forgotPassword()" style="color:#0866ff;font-size:14px;text-decoration:none">Forgotten password? Send via email</a></div>
-<div class="divider">or</div>
-<button class="btn btn-green" onclick="showSignup()">Create New Account with Email</button>
-<div style="margin-top:16px;padding:12px;background:#f0f2f5;border-radius:6px;font-size:12px;color:#65676b">
-<b>📧 Email Features:</b><br>
-✓ Login with @students.uonbi.ac.ke email<br>
-✓ All messages also sent via email<br>
-✓ Broadcast to 124 emails at once<br>
-✓ Password reset via email
+<button class="btn btn-blue" onclick="login()">Log In with Individual Email</button>
+<div style="text-align:center;margin:10px 0"><a href="#" onclick="forgot()" style="color:#0866ff;font-size:13px;text-decoration:none">Forgot password?</a></div>
+<div style="height:1px;background:#dadde1;margin:12px 0"></div>
+<button class="btn btn-green" onclick="showSignup()">+ Add New Member (Max 20)</button>
+<div style="margin-top:12px;background:#f0f2f5;padding:10px;border-radius:6px;font-size:11px">
+<b>📧 20 Max System:</b><br>
+- Works for 1 to 20 students<br>
+- You have 14 now → Can add up to 6 more<br>
+- Each: own email + own password<br>
+- Broadcast sends to all registered (max 20)
 </div>
 </div>
 
 <div id="signupForm" style="display:none">
-<h3 style="text-align:center;margin-bottom:12px">Sign Up with Email</h3>
-<input id="su_name" class="input" placeholder="Full Name (ENS 2026)">
-<input id="su_email" class="input" type="email" placeholder="University Email">
-<input id="su_phone" class="input" placeholder="Phone (07...)">
+<h3 style="text-align:center">Add Member (Max 20)</h3>
+<p style="text-align:center;font-size:12px;color:#65676b;margin:6px 0"><span id="count">0</span>/20 members registered • <span id="remaining">20</span> slots left</p>
+<div style="background:#e7f3ff;padding:8px;border-radius:6px;margin-bottom:8px;text-align:center">
+<div style="width:100%;background:#ddd;height:8px;border-radius:4px;overflow:hidden"><div id="progress" style="height:100%;background:#0866ff;width:0%"></div></div>
+<small id="progressText">0% full</small>
+</div>
+<input id="su_name" class="input" placeholder="Full Name">
+<input id="su_email" class="input" type="email" placeholder="Individual Email">
 <input id="su_reg" class="input" placeholder="Reg No: ENS/001/2026">
-<input id="su_pass" class="input" type="password" placeholder="New Password (min 6 chars)">
-<button class="btn btn-green" onclick="signup()">Sign Up via Email</button>
-<div style="text-align:center;margin-top:12px"><a href="#" onclick="showLogin()" style="color:#0866ff;font-size:14px">Already have account? Log in</a></div>
+<input id="su_pass" class="input" type="password" placeholder="Create Password">
+<button class="btn btn-green" onclick="signup()">Register This Email</button>
+<div style="text-align:center;margin-top:10px"><a href="#" onclick="showLogin()" style="color:#0866ff;font-size:13px">Back to Login</a></div>
+<div id="memberPreview" style="margin-top:12px;max-height:150px;overflow-y:auto"></div>
+</div>
+</div>
 </div>
 
-</div>
-</div>
-
-<!-- MAIN APP (Hidden until login) -->
 <div id="mainApp" style="display:none">
-
 <div class="header">
-<div style="display:flex;align-items:center;gap:8px"><b style="color:#0866ff;font-size:22px">ensCONNECT</b> <span class="email-badge" id="userEmailBadge">email@uonbi</span></div>
-<div style="display:flex;gap:8px;align-items:center"><div style="background:#e4e6eb;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center">🔔</div><div class="av" id="mainAv">E</div><span onclick="logout()" style="font-size:12px;color:#65676b">Logout</span></div>
+<div style="display:flex;align-items:center;gap:8px"><b style="color:#0866ff;font-size:20px">ensCONNECT</b><span class="badge" id="userBadge">-</span><span style="font-size:11px;background:#31a24c;color:#fff;padding:2px 6px;border-radius:10px">● <span id="onlineCount">0</span>/20 Members</span></div>
+<div style="display:flex;gap:8px;align-items:center"><div class="av" id="mainAv">A</div><span onclick="logout()" style="font-size:11px;color:#65676b;cursor:pointer">Logout</span></div>
 </div>
-
-<div style="background:#fff;padding:8px 12px;display:flex;gap:8px;margin:8px;border-radius:8px">
-<button onclick="broadcastEmail()" style="flex:1;padding:10px;background:#0866ff;color:#fff;border:0;border-radius:6px;font-weight:700;font-size:12px">📧 BROADCAST TO ALL EMAILS</button>
-<button onclick="openEmailMessenger()" style="flex:1;padding:10px;background:#42b72a;color:#fff;border:0;border-radius:6px;font-weight:700;font-size:12px">⚡ EMAIL MESSENGER</button>
+<div style="display:flex;gap:8px;padding:8px">
+<button onclick="broadcast20()" style="flex:1;padding:12px;background:#0866ff;color:#fff;border:0;border-radius:6px;font-weight:700;font-size:12px">📧 BROADCAST TO ALL (<span class="bc">0</span>)</button>
+<button onclick="openMembers()" style="flex:1;padding:12px;background:#42b72a;color:#fff;border:0;border-radius:6px;font-weight:700;font-size:12px">👥 VIEW MEMBERS (<span class="bc">0</span>)</button>
 </div>
-
-<div class="feed" id="feed">
-
-<div class="card" style="padding:12px">
-<div style="display:flex;gap:10px;align-items:center"><div class="av">📧</div><div><b>Email System Active</b><br><small style="color:#65676b">Logged in as <span id="loggedEmail">-</span> • All messages via email</small></div></div>
-<div style="margin-top:10px;background:#e7f3ff;padding:10px;border-radius:6px;font-size:13px">
-<b>How email works:</b><br>
-1. You send message → It appears here + also sent to their university email<br>
-2. They reply via email → It appears in app<br>
-3. Broadcast → Sends email to all 124 @students.uonbi.ac.ke at once
+<div id="feed" style="max-width:600px;margin:0 auto;padding-bottom:60px"></div>
+<div id="adminPanel" class="card" style="border-left:4px solid #0866ff;display:none">
+<h4>👑 Admin - Manage Up To 20 Emails</h4>
+<div id="adminList" style="margin-top:8px"></div>
+<button onclick="exportEmails()" style="margin-top:8px;padding:8px;background:#e7f3ff;border:0;border-radius:6px;color:#0866ff;font-weight:600;width:100%">📋 Export All Emails</button>
+<button onclick="clearAll()" style="margin-top:6px;padding:8px;background:#ffe7e7;border:0;border-radius:6px;color:#d00;font-weight:600;width:100%">🗑️ Clear All (Reset)</button>
 </div>
 </div>
 
-</div>
-</div>
-
-<!-- EMAIL MESSENGER -->
-<div id="emailMessenger" style="position:fixed;inset:0;background:#fff;z-index:200;display:none;flex-direction:column">
-<div style="padding:12px;background:#0866ff;color:#fff;display:flex;align-items:center;gap:10px">
-<span onclick="document.getElementById('emailMessenger').style.display='none'" style="font-size:22px">←</span>
-<b>📧 Email Messenger • 124 ENS Members</b>
-</div>
-<div style="padding:8px;display:flex;gap:6px;background:#f0f2f5">
-<input id="emailSearch" placeholder="Search by email or name..." style="flex:1;padding:10px;border-radius:20px;border:1px solid #ddd" oninput="renderEmailMembers(this.value)">
-<button onclick="broadcastEmail()" style="padding:10px 14px;background:#0866ff;color:#fff;border:0;border-radius:20px;font-size:12px">📧 Broadcast</button>
-</div>
-<div id="emailMemberList" style="flex:1;overflow-y:auto"></div>
+<div id="membersModal" style="position:fixed;inset:0;background:#fff;z-index:200;display:none;flex-direction:column">
+<div style="padding:12px;background:#0866ff;color:#fff;display:flex;align-items:center;gap:10px"><span onclick="document.getElementById('membersModal').style.display='none'" style="font-size:22px">←</span><b>👥 ENS Members (<span id="modalCount">0</span>/20 max)</b></div>
+<div id="membersListFull" style="flex:1;overflow-y:auto"></div>
 </div>
 
-<!-- CHAT VIA EMAIL -->
-<div id="emailChat" style="position:fixed;inset:0;background:#fff;z-index:300;display:none;flex-direction:column">
-<div style="padding:10px;background:#fff;border-bottom:1px solid #ddd;display:flex;align-items:center;gap:10px">
-<span onclick="document.getElementById('emailChat').style.display='none'" style="font-size:22px">←</span>
-<div class="av" id="ecAv">E</div>
-<div style="flex:1"><b id="ecName">Name</b><br><small id="ecEmail" style="color:#65676b">email@uonbi.ac.ke • 📧 Email + App</small></div>
-<div style="font-size:20px">📧</div>
-</div>
-<div id="ecBox" style="flex:1;overflow-y:auto;padding:10px;background:#f0f2f5"></div>
-<div style="padding:8px;background:#fff;display:flex;gap:8px;border-top:1px solid #ddd">
-<input id="ecInput" placeholder="Type message (will also send via email)..." style="flex:1;padding:12px;border-radius:20px;border:1px solid #ddd;background:#f0f2f5" onkeypress="if(event.key==='Enter')sendEmailMsg()">
-<button onclick="sendEmailMsg()" style="width:44px;height:44px;border-radius:50%;border:0;background:#0866ff;color:#fff">➤</button>
-</div>
+<div id="chatModal" style="position:fixed;inset:0;background:#fff;z-index:300;display:none;flex-direction:column">
+<div style="padding:10px;border-bottom:1px solid #ddd;display:flex;align-items:center;gap:10px"><span onclick="document.getElementById('chatModal').style.display='none'" style="font-size:22px">←</span><div class="av" id="chatAv">A</div><div style="flex:1"><b id="chatName">Name</b><br><small id="chatEmail" style="color:#65676b"></small></div><span style="font-size:20px">📧</span></div>
+<div id="chatBox" style="flex:1;overflow-y:auto;padding:10px;background:#f0f2f5"></div>
+<div style="padding:8px;display:flex;gap:8px;border-top:1px solid #ddd"><input id="chatInput" placeholder="Message via individual email..." style="flex:1;padding:12px;border-radius:20px;border:1px solid #ddd;background:#f0f2f5" onkeypress="if(event.key==='Enter')sendMsg()"><button onclick="sendMsg()" style="width:44px;height:44px;border-radius:50%;border:0;background:#0866ff;color:#fff">➤</button></div>
 </div>
 
 <script>
-let currentUser = JSON.parse(localStorage.getItem('ens_current_user')||'null');
-let users = JSON.parse(localStorage.getItem('ens_users')||'[]');
-let members = [
- {n:'Amos Nyongesa',email:'amos.nyongesa@students.uonbi.ac.ke',phone:'0712345678',reg:'ENS/001/2026',online:true},
- {n:'Becky Wambui',email:'becky.wambui@students.uonbi.ac.ke',phone:'0722123456',reg:'ENS/002/2026',online:true},
- {n:'Kelvin Ochieng',email:'kelvin.ochieng@students.uonbi.ac.ke',phone:'0700123456',reg:'ENS/003/2026',online:true},
- {n:'Dr Okore',email:'okore@uonbi.ac.ke',phone:'0733123456',reg:'STAFF/001',online:true},
- {n:'Linet Achieng',email:'linet.achieng@students.uonbi.ac.ke',phone:'0711223344',reg:'ENS/004/2026',online:false}
-];
+const MAX = 20;
+let users = JSON.parse(localStorage.getItem('ens_20_users')|| localStorage.getItem('ens_14_users') || '[]');
+if(users.length==0){
+ users=[{name:'Amos Wairene',email:'amoswairene37@gmail.com',reg:'ENS/001/2026',pass:'123456',role:'admin'}];
+}
+localStorage.setItem('ens_20_users',JSON.stringify(users));
+let currentUser = JSON.parse(localStorage.getItem('ens_20_current')||localStorage.getItem('ens_14_current')||'null');
+if(currentUser) showMain();
 
-if(currentUser){showMain();}
-
-function showSignup(){document.getElementById('loginForm').style.display='none';document.getElementById('signupForm').style.display='block';}
-function showLogin(){document.getElementById('signupForm').style.display='none';document.getElementById('loginForm').style.display='block';}
-
+function updateCount(){
+ let c=users.length;
+ document.getElementById('count')&&(document.getElementById('count').innerText=c);
+ document.getElementById('countTop')&&(document.getElementById('countTop').innerText=c);
+ document.getElementById('remaining')&&(document.getElementById('remaining').innerText=MAX-c);
+ document.getElementById('onlineCount')&&(document.getElementById('onlineCount').innerText=c);
+ document.getElementById('modalCount')&&(document.getElementById('modalCount').innerText=c);
+ document.querySelectorAll('.bc').forEach(e=>e.innerText=c);
+ let prog=document.getElementById('progress');
+ if(prog){ prog.style.width=(c/MAX*100)+'%'; document.getElementById('progressText').innerText=Math.round(c/MAX*100)+'% full ('+c+'/'+MAX+')'; }
+ renderPreview();
+}
+function showSignup(){document.getElementById('loginForm').style.display='none';document.getElementById('signupForm').style.display='block';updateCount();}
+function showLogin(){document.getElementById('signupForm').style.display='none';document.getElementById('loginForm').style.display='block';updateCount();}
+function renderPreview(){
+ let p=document.getElementById('memberPreview');
+ if(!p) return;
+ p.innerHTML='<b>Registered '+users.length+'/'+MAX+':</b><br><small>'+users.map(u=>`• ${u.name} - ${u.email}`).join('<br>')+'</small>';
+}
 function signup(){
  let name=document.getElementById('su_name').value.trim();
  let email=document.getElementById('su_email').value.trim().toLowerCase();
- let phone=document.getElementById('su_phone').value.trim();
  let reg=document.getElementById('su_reg').value.trim();
  let pass=document.getElementById('su_pass').value.trim();
- if(!name||!email||!pass||pass.length<6) return alert('Fill all fields. Password min 6 chars. Email must be valid.');
- if(!email.includes('@')) return alert('Enter valid university email!');
- if(users.find(u=>u.email==email)) return alert('Email already registered! Please login.');
- let user={name,email,phone,reg,pass,created:new Date().toISOString()};
- users.push(user);
- localStorage.setItem('ens_users',JSON.stringify(users));
- localStorage.setItem('ens_current_user',JSON.stringify(user));
- // simulate email
- alert('✅ Account created!\n\n📧 Verification email sent to:\n'+email+'\n\nCheck inbox to verify (simulated).');
- showMain();
+ if(!name||!email||!pass) return alert('Fill name, email, password');
+ if(!email.includes('@')) return alert('Valid email required');
+ if(users.length>=MAX) return alert('MAX '+MAX+' members reached! Cannot add more. Remove one first.');
+ if(users.find(u=>u.email==email)) return alert('This email already registered!');
+ users.push({name,email,reg,pass,role:users.length==0?'admin':'member'});
+ localStorage.setItem('ens_20_users',JSON.stringify(users));
+ alert('✅ Member added! '+name+'\n'+email+'\nNow '+users.length+'/'+MAX);
+ document.getElementById('su_name').value='';document.getElementById('su_email').value='';document.getElementById('su_reg').value='';document.getElementById('su_pass').value='';
+ updateCount();
 }
-
 function login(){
  let email=document.getElementById('email').value.trim().toLowerCase();
  let pass=document.getElementById('password').value.trim();
- if(!email||!pass) return alert('Enter email and password');
- let user = users.find(u=>u.email==email && u.pass==pass);
- // also allow demo login
- if(!user && email.includes('@')){
-  user={name:email.split('@')[0],email:email,phone:'07xxxx',reg:'ENS/DEMO'};
- }
- if(!user) return alert('Wrong email or password! Try signup first.');
- localStorage.setItem('ens_current_user',JSON.stringify(user));
+ if(!email||!pass) return alert('Enter email + password');
+ let u=users.find(x=>x.email==email && x.pass==pass);
+ if(!u) return alert('Wrong email/password. Check members list.');
+ localStorage.setItem('ens_20_current',JSON.stringify(u));
+ currentUser=u;
  showMain();
 }
-
 function showMain(){
- currentUser=JSON.parse(localStorage.getItem('ens_current_user'));
+ currentUser=JSON.parse(localStorage.getItem('ens_20_current'));
  document.getElementById('loginPage').style.display='none';
  document.getElementById('mainApp').style.display='block';
- document.getElementById('loggedEmail').innerText=currentUser.email;
- document.getElementById('userEmailBadge').innerText=currentUser.email.split('@')[0];
+ document.getElementById('userBadge').innerText=currentUser.email;
  document.getElementById('mainAv').innerText=currentUser.name[0].toUpperCase();
- document.getElementById('loggedEmail').innerText=currentUser.email;
- // add demo posts
  let feed=document.getElementById('feed');
- let demo=`<div class="card"><div style="padding:10px;display:flex;gap:10px"><div class="av">${currentUser.name[0]}</div><div style="flex:1"><b>${currentUser.name}</b><br><small style="color:#65676b">${currentUser.email} • Just now • 📧 Email verified</small></div></div><div style="padding:0 12px 12px">✅ Logged in via email! Now all my messages will be sent through university email system. ENS 2026 PRO!</div></div>`;
- feed.insertAdjacentHTML('afterbegin',demo);
-}
-
-function logout(){localStorage.removeItem('ens_current_user');location.reload();}
-
-function forgotPassword(){
- let email=prompt('Enter your university email to reset password:','');
- if(!email) return;
- alert('📧 Password reset link sent to:\n'+email+'\n\nCheck your university email inbox (including spam). Link valid for 1 hour.\n\n(Simulated - In real app would send actual email via Firebase)');
-}
-
-function openEmailMessenger(){
- document.getElementById('emailMessenger').style.display='flex';
- renderEmailMembers();
-}
-function renderEmailMembers(filter=''){
- let list=document.getElementById('emailMemberList');
- let filtered=members.filter(m=>m.n.toLowerCase().includes(filter.toLowerCase())||m.email.toLowerCase().includes(filter.toLowerCase()));
- list.innerHTML=filtered.map(m=>`
-  <div style="display:flex;gap:10px;padding:12px;border-bottom:1px solid #eee;align-items:center" onclick="openEmailChat('${m.n}','${m.email}')">
-   <div class="av" style="background:#42b72a">${m.n[0]}</div>
-   <div style="flex:1"><b style="font-size:14px">${m.n}</b><br><small style="color:#65676b">📧 ${m.email}</small><br><small style="color:${m.online?'#42b72a':'#8a8a8a'}">${m.online?'● Online':'○ Offline'} • ${m.reg}</small></div>
-   <div style="color:#0866ff;font-size:20px">📧</div>
-  </div>
- `).join('');
-}
-
-let currentEmailChat='';
-function openEmailChat(name,email){
- currentEmailChat=email;
- document.getElementById('emailChat').style.display='flex';
- document.getElementById('ecName').innerText=name;
- document.getElementById('ecEmail').innerText=email+' • 📧 Email + App';
- document.getElementById('ecAv').innerText=name[0];
- let box=document.getElementById('ecBox');
- box.innerHTML=`<div style="text-align:center;padding:20px;color:#65676b"><div style="font-size:32px">📧</div><small>Messages to ${email}<br>Sent via App + University Email<br>End-to-end encrypted</small></div>`;
-}
-
-function sendEmailMsg(){
- let input=document.getElementById('ecInput');
- let text=input.value.trim(); if(!text) return;
- let box=document.getElementById('ecBox');
- let div=document.createElement('div');
- div.style.cssText='background:#0084ff;color:#fff;padding:10px 14px;border-radius:18px;max-width:70%;margin:6px 0 6px auto;font-size:14px';
- div.innerHTML=text+'<br><small style="font-size:10px;opacity:0.8">📧 Sent via email to '+currentEmailChat+' • ✓✓ Delivered • 0.02s</small>';
- box.appendChild(div);
- box.scrollTop=9999;
- input.value='';
- // simulate email sending
- setTimeout(()=>{
-  let info=document.createElement('div');
-  info.style.cssText='text-align:center;margin:8px 0;font-size:11px;color:#65676b;background:#e7f3ff;padding:6px;border-radius:6px';
-  info.innerText='📧 Email copy sent to '+currentEmailChat+' • Opened';
-  box.appendChild(info);
-  box.scrollTop=9999;
- },500);
-}
-
-function broadcastEmail(){
- let text=prompt('📧 BROADCAST VIA EMAIL TO ALL 124 MEMBERS:\n\nThis will:\n1. Post in app feed\n2. Send email to all @students.uonbi.ac.ke\n\nType message:','📚 ENS 2026: CAT tomorrow 9am LH5 - Check email for details!');
- if(!text) return;
- let allEmails = members.map(m=>m.email).join(', ');
- // simulate email broadcast
- let mailto = `mailto:${allEmails}?subject=ENS 2026 Broadcast from ${currentUser?currentUser.email:'Admin'}&body=${encodeURIComponent(text + '\n\n---\nSent via ENS CONNECT Email Edition')}`;
-
- let feed=document.getElementById('feed');
- let div=document.createElement('div');
- div.className='card';
- div.innerHTML=`
-  <div style="padding:10px;display:flex;gap:10px"><div class="av" style="background:#ff3040">📢</div><div style="flex:1"><b>${currentUser?currentUser.name:'Admin'} • Email Broadcast</b><br><small style="color:#65676b">Just now • 📧 Sent to 124 emails • <span style="color:#42b72a">● 124 delivered</span></small></div></div>
-  <div style="padding:0 12px 12px">${text}</div>
-  <div style="padding:8px 12px;background:#e7f3ff;margin:0 10px 10px;border-radius:6px;font-size:12px">
-  📧 Email sent to:<br><small style="color:#65676b">${allEmails.substring(0,100)}... + 119 more</small><br>
-  <small style="color:#42b72a">✓ All 124 emails delivered in 0.02s</small><br>
-  <a href="${mailto}" style="color:#0866ff">Click to open in Gmail</a>
-  </div>
+ feed.innerHTML=`
+  <div class="card"><div style="display:flex;gap:10px"><div class="av" style="background:#31a24c">${currentUser.name[0]}</div><div><b>${currentUser.name}</b> ${currentUser.role=='admin'?'<span style="background:#0866ff;color:#fff;font-size:9px;padding:1px 4px;border-radius:3px">ADMIN</span>':''}<br><small style="color:#65676b">📧 ${currentUser.email} • ${currentUser.reg||''}</small></div></div><div style="margin-top:8px">✅ Individual email login successful!</div></div>
+  <div class="card" style="background:#e7f3ff"><b>📧 System: ${users.length}/${MAX} Members</b><br><small>Each student uses individual email. Max ${MAX} allowed. Currently ${users.length} registered, ${MAX-users.length} slots remaining.</small></div>
  `;
- feed.prepend(div);
-
- if(confirm('📧 Broadcast ready!\n\n✅ Posted in app\n✅ Email draft prepared for 124 members\n\nOpen Gmail to send actual emails?')){
-  window.open(mailto,'_blank');
+ if(currentUser.role=='admin' || users[0].email==currentUser.email){
+  document.getElementById('adminPanel').style.display='block';
+  renderAdmin();
  }
+ updateCount();
 }
+function renderAdmin(){
+ let list=document.getElementById('adminList');
+ list.innerHTML=users.map((u,i)=>`<div style="display:flex;gap:8px;padding:8px 0;border-bottom:1px solid #eee;align-items:center"><div class="av" style="width:32px;height:32px;font-size:12px">${u.name[0]}</div><div style="flex:1"><b style="font-size:13px">${u.name}</b> ${u.role=='admin'?'<span style="background:#0866ff;color:#fff;font-size:9px;padding:1px 4px;border-radius:3px">ADMIN</span>':''}<br><small style="font-size:11px;color:#65676b">📧 ${u.email}<br>Reg: ${u.reg||'-'}</small></div><button onclick="removeUser(${i})" style="padding:4px 8px;background:#ffe7e7;border:0;border-radius:4px;color:#d00;font-size:11px">Remove</button></div>`).join('');
+}
+function removeUser(i){ if(!confirm('Remove '+users[i].email+'?')) return; users.splice(i,1); localStorage.setItem('ens_20_users',JSON.stringify(users)); renderAdmin(); updateCount(); }
+function logout(){localStorage.removeItem('ens_20_current');location.reload();}
+function forgot(){ let email=prompt('Enter your individual email:'); if(!email) return; let u=users.find(x=>x.email==email.toLowerCase()); if(!u) return alert('Email not found in '+users.length+' members'); alert('📧 Password for '+email+' is: '+u.pass); }
+function openMembers(){
+ document.getElementById('membersModal').style.display='flex';
+ let list=document.getElementById('membersListFull');
+ list.innerHTML=users.map(u=>`<div style="display:flex;gap:10px;padding:12px;border-bottom:1px solid #eee;align-items:center" onclick="openChat('${u.name.replace(/'/g,"")}','${u.email}')"><div class="av">${u.name[0]}</div><div style="flex:1"><b>${u.name}</b> ${u.email==currentUser.email?'(You)':''}<br><small style="color:#65676b">📧 ${u.email}</small><br><small style="color:#31a24c">● Individual • ${u.reg||''}</small></div><div style="color:#0866ff">📧</div></div>`).join('')+`<div style="padding:16px;text-align:center;color:#65676b;font-size:12px">${users.length}/${MAX} members • ${MAX-users.length} slots left • Each with individual email</div>`;
+}
+let currentChatEmail='';
+function openChat(name,email){ currentChatEmail=email; document.getElementById('chatModal').style.display='flex'; document.getElementById('chatName').innerText=name; document.getElementById('chatEmail').innerText=email; document.getElementById('chatAv').innerText=name[0]; document.getElementById('chatBox').innerHTML=`<div style="text-align:center;padding:20px;color:#65676b"><div style="font-size:30px">📧</div><small>Chat with ${name}<br>${email}</small></div>`; }
+function sendMsg(){ let input=document.getElementById('chatInput'); let text=input.value.trim(); if(!text) return; let box=document.getElementById('chatBox'); let d=document.createElement('div'); d.style.cssText='background:#0084ff;color:#fff;padding:10px 14px;border-radius:18px;max-width:70%;margin:6px 0 6px auto;font-size:14px'; d.innerHTML=text+`<br><small style="font-size:10px;opacity:0.8">📧 To ${currentChatEmail} • ✓</small>`; box.appendChild(d); box.scrollTop=9999; input.value=''; }
+function broadcast20(){
+ let text=prompt(`📧 BROADCAST TO ALL ${users.length} INDIVIDUAL EMAILS (Max ${MAX}):\n\n${users.map(u=>u.email).join('\n')}\n\nMessage:`,'ENS 2026: Meeting tomorrow 9am');
+ if(!text) return;
+ let emails=users.map(u=>u.email).join(',');
+ let mailto=`mailto:${emails}?subject=ENS 2026 Broadcast&body=${encodeURIComponent(text)}`;
+ let feed=document.getElementById('feed');
+ let div=document.createElement('div'); div.className='card'; div.style.borderLeft='4px solid #0866ff';
+ div.innerHTML=`<div><b>📢 Broadcast to ${users.length} emails</b><br><small>From: ${currentUser.email}</small></div><div style="margin-top:8px">${text}</div><div style="margin-top:8px;background:#e7f3ff;padding:8px;border-radius:6px;font-size:11px">📧 To: ${users.map(u=>u.email).join(', ')}<br><a href="${mailto}" style="color:#0866ff">Open Gmail</a></div>`;
+ feed.prepend(div);
+ if(confirm(`✅ Posted!\nSend email to ${users.length} members?`)) window.open(mailto,'_blank');
+}
+function exportEmails(){ let t=users.map(u=>`${u.name},${u.email},${u.reg||''}`).join('\n'); prompt('Copy all emails:',t); }
+function clearAll(){ if(confirm('Clear all '+users.length+' members? This will reset to 0/20')){ users=[]; localStorage.setItem('ens_20_users',JSON.stringify(users)); renderAdmin(); updateCount(); location.reload(); } }
+updateCount();
 </script>
 </body></html>
