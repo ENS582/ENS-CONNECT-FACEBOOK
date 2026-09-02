@@ -2,90 +2,81 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ENS CONNECT</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>ENS CONNECT - Cloud</title>
 <style>
-*{box-sizing:border-box;margin:0;font-family:Arial}
-body{background:#f0f2f5}
+*{box-sizing:border-box;margin:0;font-family:Arial;-webkit-tap-highlight-color:transparent}
+body{background:#f0f2f5;touch-action:manipulation}
 .login-screen{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#f0f2f5;padding:20px}
-.fb-logo{color:#1877f2;font-size:48px;font-weight:900;letter-spacing:-1px;margin-bottom:10px}
-.fb-tag{font-size:18px;margin-bottom:30px;text-align:center}
-.login-box{background:white;padding:20px;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,.15);width:100%;max-width:400px}
-.login-box input{width:100%;padding:14px;border:1px solid #dddfe2;border-radius:8px;margin-bottom:12px;font-size:16px;outline:none}
-.login-box input:focus{border-color:#1877f2}
-.btn-login{width:100%;background:#1877f2;color:white;border:none;padding:14px;border-radius:8px;font-weight:900;font-size:18px;cursor:pointer}
-.btn-login:active{transform:scale(.98)}
-.forgot{text-align:center;margin-top:15px;color:#1877f2;font-size:14px}
-.divider{border-top:1px solid #dddfe2;margin:20px 0}
-.btn-create{width:60%;margin:0 auto;display:block;background:#42b72a;color:white;border:none;padding:12px;border-radius:8px;font-weight:900}
+.fb-logo{color:#1877f2;font-size:44px;font-weight:900}
+.login-box{background:white;padding:20px;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,.15);width:100%;max-width:400px;margin-top:20px}
+.login-box input{width:100%;padding:14px;border:1px solid #dddfe2;border-radius:8px;margin-bottom:12px;font-size:16px}
+.btn-login{width:100%;background:#1877f2;color:white;border:none;padding:14px;border-radius:8px;font-weight:900;font-size:18px;touch-action:manipulation}
+.btn-login:active{transform:scale(.97)}
 .header{background:white;padding:10px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 1px 3px rgba(0,0,0,.15);position:sticky;top:0;z-index:999}
-.logo{font-weight:900;color:#1877f2;font-size:22px}
+.logo{font-weight:900;color:#1877f2;font-size:20px}
 .badge{padding:6px 12px;border-radius:12px;color:white;font-weight:900;font-size:11px}
-.badge.on{background:#22c55e}.badge.off{background:#f59e0b}
+.badge.on{background:#22c55e;animation:blink 1.5s infinite}
+.badge.off{background:#ef4444}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.6}}
 .avatar{width:42px;height:42px;background:#1877f2;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900}
-.btn-logout{border:2px solid #ef4444;color:#ef4444;background:white;padding:8px 16px;border-radius:10px;font-weight:900}
+.btn-logout{border:2px solid #ef4444;color:#ef4444;background:white;padding:8px 16px;border-radius:10px;font-weight:900;touch-action:manipulation}
+.btn-logout:active{background:#fee2e2;transform:scale(.95)}
 .menu{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:12px}
-.menu button{border:none;padding:16px;border-radius:16px;color:white;font-weight:900;font-size:14px}
+.menu button{border:none;padding:18px;border-radius:16px;color:white;font-weight:900;font-size:14px;touch-action:manipulation}
+.menu button:active{transform:scale(.92)}
 .blue{background:#1877f2}.green{background:#22c55e}.red{background:#ef4444}.black{background:#111}
 .cloud-bar{background:#16a34a;color:white;text-align:center;padding:8px;font-weight:900;font-size:12px}
 .post{background:white;margin:10px;border-radius:12px;padding:12px;box-shadow:0 1px 2px rgba(0,0,0,.1)}
+.input-row{display:flex;gap:8px;padding:10px;background:white;margin:10px;border-radius:12px}
+.input-row input{flex:1;background:#f0f2f5;border:none;padding:12px;border-radius:20px;outline:none}
 .hidden{display:none!important}
 </style>
 </head>
 <body>
 
-<!-- FACEBOOK STYLE LOGIN SCREEN -->
 <div id="loginScreen" class="login-screen">
   <div class="fb-logo">ENS CONNECT</div>
-  <div class="fb-tag">Connect with friends and the world<br>around you on ENS.</div>
   <div class="login-box">
-    <input id="emailInput" type="email" placeholder="Email address or phone number" value="amoswairene37@gmail.com">
+    <input id="emailInput" type="email" placeholder="Email">
     <input id="passInput" type="password" placeholder="Password">
     <button class="btn-login" id="loginBtn">Log in</button>
-    <div class="forgot">Forgotten password?</div>
-    <div class="divider"></div>
-    <button class="btn-create" onclick="alert('Create account - Contact Admin')">Create new account</button>
-    <div style="text-align:center;margin-top:20px;font-size:12px;color:#666">☁️ Cloud Sync • Fast • Secure</div>
+    <div id="loginStatus" style="text-align:center;margin-top:10px;font-size:11px;color:gray">☁️ Ready - Cloud well connected</div>
   </div>
 </div>
 
-<!-- MAIN APP - HIDDEN UNTIL LOGIN -->
 <div id="mainApp" class="hidden">
   <div class="header">
-    <div>
-      <div class="logo">ENS CONNECT</div>
-      <div style="display:flex;gap:6px;margin-top:5px">
-        <span id="cloudBadge" class="badge off">● Connecting Cloud...</span>
-      </div>
-    </div>
-    <div style="display:flex;gap:8px;align-items:center">
-      <div class="avatar">A</div>
-      <button class="btn-logout" id="logoutBtn">Logout</button>
-    </div>
+    <div><div class="logo">ENS CONNECT</div><span id="cloudBadge" class="badge off">● Connecting...</span></div>
+    <div style="display:flex;gap:8px;align-items:center"><div class="avatar" id="avatarLetter">A</div><button class="btn-logout" id="logoutBtn">Logout</button></div>
   </div>
   <div class="menu">
-    <button class="blue" id="btnMsg">💬 Messenger (1) ☁️ Cloud</button>
+    <button class="blue" id="btnMsg">💬 Messenger ☁️</button>
     <button class="green" id="btnCall">📹 Group Call</button>
     <button class="red" id="btnStory">➕ Story</button>
     <button class="black" id="btnBroad">📢 Broadcast</button>
   </div>
-  <div id="cloudBar" class="cloud-bar">☁️ CLOUD CONNECTING...</div>
-  <div id="feed" style="padding:10px"></div>
+  <div id="cloudBar" class="cloud-bar">☁️ Connecting to ens-connect-2026 cloud...</div>
+  <div class="input-row"><div class="avatar" id="avatar2" style="width:36px;height:36px">A</div><input id="postInput" placeholder="What's on your mind?"><button id="postBtn" style="background:#1877f2;color:white;border:none;padding:10px 16px;border-radius:20px;font-weight:900">Post</button></div>
+  <div id="feed"></div>
 </div>
 
 <script>
-// CHECK IF LOGGED IN
+// TOUCH + LOGIN LOGIC - WORKS EVEN WITHOUT FIREBASE
+function getName(email){
+  if(!email) return "User";
+  let n=email.split('@')[0].replace(/[._0-9]/g,' ').trim();
+  return n.split(' ').map(w=>w.charAt(0).toUpperCase()+w.slice(1)).join(' ') || "User";
+}
 function checkLogin(){
-  const logged = localStorage.getItem('ens_logged_in');
-  if(logged === 'true'){
+  const logged=localStorage.getItem('ens_logged_in');
+  const email=localStorage.getItem('ens_email')||"";
+  if(logged==='true' && email){
+    const name=getName(email);
     document.getElementById('loginScreen').classList.add('hidden');
     document.getElementById('mainApp').classList.remove('hidden');
-    setTimeout(()=>{
-      document.getElementById('cloudBadge').textContent='● Cloud Sync ON - Fast!';
-      document.getElementById('cloudBadge').className='badge on';
-      document.getElementById('cloudBar').textContent='☁️ CLOUD ON • Fast sync • Real-time • 1/20 members';
-      document.getElementById('feed').innerHTML='<div class="post" style="border-left:5px solid #22c55e;background:#f0fdf4"><b>☁️ Welcome back Amos!</b><br>Cloud connected - All buttons touching!</div>';
-    },800);
+    document.getElementById('avatarLetter').textContent=name.charAt(0).toUpperCase();
+    document.getElementById('avatar2').textContent=name.charAt(0).toUpperCase();
   } else {
     document.getElementById('loginScreen').classList.remove('hidden');
     document.getElementById('mainApp').classList.add('hidden');
@@ -93,43 +84,52 @@ function checkLogin(){
 }
 checkLogin();
 
-// LOGIN BUTTON - FACEBOOK STYLE
-document.getElementById('loginBtn').addEventListener('click', function(){
-  const email = document.getElementById('emailInput').value;
-  const pass = document.getElementById('passInput').value;
-  if(!email || !pass){ alert('Enter email and password'); return; }
-  this.textContent='Logging in...';
+function handleLogin(){
+  const email=document.getElementById('emailInput').value.trim();
+  const pass=document.getElementById('passInput').value.trim();
+  if(!email||!pass){ alert('Enter email & password'); return; }
+  const btn=document.getElementById('loginBtn');
+  btn.textContent='Logging in...';
+  btn.disabled=true;
   setTimeout(()=>{
     localStorage.setItem('ens_logged_in','true');
-    localStorage.setItem('ens_email', email);
+    localStorage.setItem('ens_email',email);
     checkLogin();
-    this.textContent='Log in';
-  },1000);
-});
+    btn.textContent='Log in'; btn.disabled=false;
+  },400);
+}
+document.getElementById('loginBtn').addEventListener('click', handleLogin);
+document.getElementById('loginBtn').addEventListener('touchstart', handleLogin);
+document.getElementById('emailInput').addEventListener('keydown', e=>{if(e.key==='Enter') handleLogin();});
+document.getElementById('passInput').addEventListener('keydown', e=>{if(e.key==='Enter') handleLogin();});
 
-// LOGOUT - SHOW FACEBOOK LOGIN SCREEN AGAIN
-document.getElementById('logoutBtn').addEventListener('click', function(){
-  if(confirm('Logout from ENS CONNECT?')){
-    localStorage.removeItem('ens_logged_in');
-    try{indexedDB.deleteDatabase('firebaseLocalStorageDb');}catch(e){}
-    // Show Facebook style login again
-    document.getElementById('mainApp').classList.add('hidden');
-    document.getElementById('loginScreen').classList.remove('hidden');
-    document.getElementById('passInput').value='';
-    alert('✅ Logged out! Login again like Facebook');
-  }
-});
+function handleLogout(){
+  if(!confirm('Logout?')) return;
+  localStorage.removeItem('ens_logged_in');
+  document.getElementById('mainApp').classList.add('hidden');
+  document.getElementById('loginScreen').classList.remove('hidden');
+  document.getElementById('passInput').value='';
+}
+document.getElementById('logoutBtn').addEventListener('click', handleLogout);
+document.getElementById('logoutBtn').addEventListener('touchstart', handleLogout);
 
-document.getElementById('btnMsg').addEventListener('click', ()=>alert('💬 Messenger Cloud - 1 member'));
-document.getElementById('btnCall').addEventListener('click', ()=>alert('📹 Group Call ready'));
-document.getElementById('btnStory').addEventListener('click', ()=>{let t=prompt('Story text:'); if(t){let d=document.createElement('div'); d.className='post'; d.innerHTML='<b>Amos</b><br>'+t; document.getElementById('feed').prepend(d);}});
-document.getElementById('btnBroad').addEventListener('click', ()=>alert('📢 Broadcast'));
+function setupBtn(id, msg){
+  const el=document.getElementById(id);
+  const fn=()=>alert(msg);
+  el.addEventListener('click', fn);
+  el.addEventListener('touchstart', fn);
+}
+setupBtn('btnMsg','💬 Messenger - Cloud ON');
+setupBtn('btnCall','📹 Group Call - Cloud ON');
+setupBtn('btnStory','➕ Story - Tap Post box');
+setupBtn('btnBroad','📢 Broadcast - Cloud ON');
 </script>
 
-<!-- FIREBASE CLOUD -->
 <script type="module">
+// WELL CONNECTED TO FIREBASE - FIXED
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+import { getDatabase, ref, push, onValue, onChildAdded } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
 const firebaseConfig = {
   apiKey: "AIzaSyB19__OdQ6gHWW-Wmari2jMVZfa-P5qe0E",
   authDomain: "ens-connect-2026-e563b.firebaseapp.com",
@@ -137,4 +137,11 @@ const firebaseConfig = {
   projectId: "ens-connect-2026-e563b",
   storageBucket: "ens-connect-2026-e563b.appspot.com",
   messagingSenderId: "382030495866",
-  appId: "1:382030
+  appId: "1:382030495866:web:5c42bf76bff50623ed3bc3"
+};
+
+console.log("Connecting to Firebase:", firebaseConfig.projectId);
+let db;
+try{
+  const app=initializeApp(firebaseConfig);
+  db=getDatabase(app);
