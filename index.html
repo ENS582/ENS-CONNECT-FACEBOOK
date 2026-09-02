@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>ENS CONNECT - Firebase Cloud</title>
+<title>ENS CONNECT - Cloud ON</title>
 <style>
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 body{margin:0;background:#f0f2f5;font-family:Arial}
@@ -13,26 +13,27 @@ body{margin:0;background:#f0f2f5;font-family:Arial}
 </style></head><body>
 
 <div class="h">
-<div><b style="color:#0866ff;font-size:24px">ENS CONNECT</b><br><small id="eSmall" style="background:#e7f3ff;color:#0866ff;padding:3px 8px;border-radius:6px;font-weight:700">loading...</small> <small id="cloudBadge" style="background:#ff9800;color:#fff;padding:3px 8px;border-radius:6px">● Local - Setup Firebase</small></div>
+<div><b style="color:#0866ff;font-size:22px">ENS CONNECT</b><br><small id="eSmall" style="background:#e7f3ff;color:#0866ff;padding:3px 8px;border-radius:6px;font-weight:700">loading...</small> <small id="cloudBadge" style="background:#ff9800;color:#fff;padding:3px 8px;border-radius:6px">● Connecting Cloud...</small></div>
 <div style="display:flex;gap:8px;align-items:center"><div class="av" id="avTop">A</div><div onclick="logout()" style="color:red;border:1px solid red;padding:7px 12px;border-radius:8px;font-weight:900;font-size:12px">Logout</div></div>
 </div>
 
 <div style="display:flex;flex-wrap:wrap;padding:8px">
-<div class="b blue" onclick="openChats()">💬 Messenger<br>(<span id="mc">1</span>) Cloud</div>
+<div class="b blue" onclick="openChats()">💬 Messenger<br>(<span id="mc">1</span>) ☁️ Cloud</div>
 <div class="b green" onclick="startCall()">📹 Group Call</div>
 <div class="b red" onclick="addStory()">➕ Story</div>
 <div class="b dark" onclick="broadcast()">📧 Broadcast</div>
 </div>
 
-<div id="statusBar" style="background:#222;color:#0f0;padding:10px;text-align:center;font-weight:900;font-size:11px">● TOUCH FIXED • Loading Cloud... Buttons work even offline 5h</div>
+<div id="statusBar" style="background:#222;color:#0f0;padding:10px;text-align:center;font-weight:900;font-size:11px">● TOUCH FIXED • Connecting to Firebase Cloud...</div>
 <div id="storyRow" style="display:flex;gap:8px;padding:12px;background:#fff;overflow-x:auto;margin:8px 0"></div>
 <div style="max-width:600px;margin:0 auto">
 <div class="card" style="display:flex;gap:12px;align-items:center" onclick="createPost()"><div class="av" id="av2">A</div><div style="flex:1;background:#f0f2f5;padding:12px 16px;border-radius:24px">What's on your mind, ENS?</div></div>
 <div id="feed"></div>
+<div class="card" style="background:#e7f3ff;font-size:11px">Invite link: <span id="link" style="color:#0866ff;word-break:break-all"></span><br><div class="b blue" style="margin-top:8px;padding:12px" onclick="copyLink()">📋 Copy Invite Link (Cloud Sync)</div></div>
 </div>
 
 <script>
-// === 1. IMMEDIATE TOUCH - NO BLOCKING ===
+// === IMMEDIATE TOUCH - NO BLOCK ===
 var users=[]; try{ users=JSON.parse(localStorage.getItem('users20')||'[]'); }catch(e){}
 if(users.length==0) try{ users=JSON.parse(localStorage.getItem('ens_20_users')||'[]'); }catch(e){}
 if(users.length==0) users=[{name:'Amos Wairene',email:'amoswairene37@gmail.com',pass:'123456'}];
@@ -49,6 +50,7 @@ if(addEmail){
  if(!users.find(function(u){return u.email==addEmail;})){
   users.push({name:p.get('name')||addEmail.split('@')[0],email:addEmail,pass:'1234'});
   localStorage.setItem('users20',JSON.stringify(users));
+  setTimeout(function(){ if(window.pushUser) window.pushUser({name:p.get('name')||addEmail.split('@')[0],email:addEmail}); },3000);
  }
 }
 
@@ -56,6 +58,7 @@ document.getElementById('eSmall').innerText=current.email;
 document.getElementById('avTop').innerText=current.name.charAt(0);
 document.getElementById('av2').innerText=current.name.charAt(0);
 document.getElementById('mc').innerText=users.length;
+document.getElementById('link').innerText=location.href.split('?')[0]+'?add='+encodeURIComponent(current.email)+'&name='+encodeURIComponent(current.name);
 
 function renderStories(){
  var valid=stories.filter(function(s){return Date.now()-s.time<24*3600*1000;});
@@ -64,7 +67,7 @@ function renderStories(){
  document.getElementById('storyRow').innerHTML=h;
 }
 renderStories();
-document.getElementById('feed').innerHTML='<div class="card"><b>✅ TOUCH FIXED - Firebase Loading in Background</b><br>Members: '+users.length+'/20 • Buttons work now, cloud syncs after 2 sec</div>';
+document.getElementById('feed').innerHTML='<div class="card"><b>✅ Cloud Connecting...</b><br>Members: '+users.length+'/20 • Touch works, cloud syncs in 2 sec</div>';
 
 var curChat=null;
 function openChats(){
@@ -74,78 +77,81 @@ function openChats(){
 }
 function openC(name,email){
  curChat=email;
- var msgs=(chats[email]||[]); var msgsHtml=msgs.length==0?'<div style="text-align:center;padding:30px;color:#666">No messages yet</div>':msgs.map(function(m){return '<div style="max-width:75%;padding:10px 14px;border-radius:18px;margin:6px 10px;'+(m.from==current.email?'background:#0866ff;color:#fff;margin-left:auto':'background:#e4e6eb')+'">'+m.text+'</div>';}).join('');
- var html='<div id="chatWin" style="position:fixed;inset:0;background:#fff;z-index:10000;display:flex;flex-direction:column"><div style="padding:12px;border-bottom:1px solid #ddd;display:flex;gap:10px;align-items:center"><span onclick="document.getElementById(\'chatWin\').remove()" style="font-size:28px">←</span><div class="av">'+name.charAt(0)+'</div><div style="flex:1"><b>'+name+'</b><br><small>'+email+'</small></div></div><div id="cBox" style="flex:1;overflow-y:auto;background:#f0f2f5;padding:10px">'+msgsHtml+'</div><div style="padding:10px;display:flex;gap:8px"><input id="cInput" placeholder="Message..." style="flex:1;padding:14px;border-radius:24px;border:1px solid #ccc;font-size:16px"><div onclick="send()" style="width:48px;height:48px;background:#0866ff;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:20px">➤</div></div></div>';
+ var msgs=(chats[email]||[]); var msgsHtml=msgs.length==0?'<div style="text-align:center;padding:30px;color:#666">No messages yet - Cloud will sync</div>':msgs.map(function(m){return '<div style="max-width:75%;padding:10px 14px;border-radius:18px;margin:6px 10px;'+(m.from==current.email?'background:#0866ff;color:#fff;margin-left:auto':'background:#e4e6eb')+'">'+m.text+'</div>';}).join('');
+ var html='<div id="chatWin" style="position:fixed;inset:0;background:#fff;z-index:10000;display:flex;flex-direction:column"><div style="padding:12px;border-bottom:1px solid #ddd;display:flex;gap:10px;align-items:center"><span onclick="document.getElementById(\'chatWin\').remove()" style="font-size:28px">←</span><div class="av">'+name.charAt(0)+'</div><div style="flex:1"><b>'+name+'</b><br><small>'+email+'</small></div></div><div id="cBox" style="flex:1;overflow-y:auto;background:#f0f2f5;padding:10px">'+msgsHtml+'</div><div style="padding:10px;display:flex;gap:8px"><input id="cInput" placeholder="Message (cloud fast)..." style="flex:1;padding:14px;border-radius:24px;border:1px solid #ccc;font-size:16px"><div onclick="send()" style="width:48px;height:48px;background:#0866ff;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:20px">➤</div></div></div>';
  document.body.insertAdjacentHTML('beforeend',html);
 }
 function send(){
  var inp=document.getElementById('cInput'); var txt=inp.value.trim(); if(!txt||!curChat) return;
  var m={from:current.email,to:curChat,text:txt,time:Date.now()};
  if(!chats[curChat]) chats[curChat]=[]; chats[curChat].push(m); localStorage.setItem('chats',JSON.stringify(chats));
- var box=document.getElementById('cBox'); if(box){ var d=document.createElement('div'); d.style.cssText='max-width:75%;padding:10px 14px;border-radius:18px;margin:6px 10px;background:#0866ff;color:#fff;margin-left:auto'; d.innerHTML=txt; box.appendChild(d); box.scrollTop=99999; }
+ var box=document.getElementById('cBox'); if(box){ var d=document.createElement('div'); d.style.cssText='max-width:75%;padding:10px 14px;border-radius:18px;margin:6px 10px;background:#0866ff;color:#fff;margin-left:auto'; d.innerHTML=txt+'<br><small>☁️ Cloud sync</small>'; box.appendChild(d); box.scrollTop=99999; }
  inp.value='';
  if(window.firebasePush) window.firebasePush(m,curChat);
 }
-function addStory(){ var t=prompt('Story text:'); if(t===null) return; var s={name:current.name,text:t,img:'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=400',time:Date.now()}; stories.unshift(s); localStorage.setItem('stories',JSON.stringify(stories)); renderStories(); if(window.firebasePushStory) window.firebasePushStory(s); }
+function addStory(){ var t=prompt('Story text:'); if(t===null) return; var s={name:current.name,email:current.email,text:t,img:'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=400',time:Date.now()}; stories.unshift(s); localStorage.setItem('stories',JSON.stringify(stories)); renderStories(); if(window.firebasePushStory) window.firebasePushStory(s); }
 function viewS(i){ var valid=stories.filter(function(s){return Date.now()-s.time<24*3600*1000;}); alert(valid[i].name+': '+valid[i].text); }
 function startCall(){ var room='ENS'+Date.now(); var url='https://meet.jit.si/'+room; window.open(url,'_blank'); var emails=users.map(function(u){return u.email;}).join(','); window.location.href='mailto:'+emails+'?subject=ENS Group Call&body='+encodeURIComponent('Join: '+url); }
-function broadcast(){ var t=prompt('Broadcast:'); if(!t) return; var emails=users.map(function(u){return u.email;}).join(','); window.location.href='mailto:'+emails+'?subject=Broadcast&body='+encodeURIComponent(t); document.getElementById('feed').insertAdjacentHTML('afterbegin','<div class="card"><b>📢 Broadcast</b><br>'+t+'</div>'); }
-function createPost(){ var t=prompt('Post:'); if(!t) return; document.getElementById('feed').insertAdjacentHTML('afterbegin','<div class="card"><b>'+current.name+'</b><br>'+t+'</div>'); if(window.firebasePushPost) window.firebasePushPost({name:current.name,text:t,time:Date.now()}); }
+function broadcast(){ var t=prompt('Broadcast to '+users.length+':'); if(!t) return; var emails=users.map(function(u){return u.email;}).join(','); window.location.href='mailto:'+emails+'?subject=Broadcast&body='+encodeURIComponent(t); document.getElementById('feed').insertAdjacentHTML('afterbegin','<div class="card"><b>📢 Broadcast</b><br>'+t+'</div>'); if(window.firebasePushPost) window.firebasePushPost({name:current.name,text:t,time:Date.now(),type:'broadcast'}); }
+function createPost(){ var t=prompt('Post:'); if(!t) return; document.getElementById('feed').insertAdjacentHTML('afterbegin','<div class="card"><b>'+current.name+'</b><br>'+t+'</div>'); if(window.firebasePushPost) window.firebasePushPost({name:current.name,email:current.email,text:t,time:Date.now()}); }
+function copyLink(){ var link=location.href.split('?')[0]+'?add='+encodeURIComponent(current.email)+'&name='+encodeURIComponent(current.name); if(navigator.clipboard){ navigator.clipboard.writeText(link).then(function(){ alert('✅ Cloud invite link copied!\n'+link+'\n\nSend to friend - When he opens, he auto-joins cloud!'); }); } else { prompt('Copy:',link); } }
 function logout(){ localStorage.removeItem('current'); location.reload(); }
 </script>
 
 <script type="module">
-// === 2. FIREBASE LOADS AFTER 2 SECONDS - DOES NOT BLOCK TOUCH ===
 setTimeout(async ()=>{
  try{
   const { initializeApp } = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js");
   const { getDatabase, ref, set, onValue, push } = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js");
 
-  // 🔥 PASTE YOUR CONFIG HERE - REPLACE THIS DEMO
   const firebaseConfig = {
-    apiKey: "REPLACE_WITH_YOUR_API_KEY",
-    authDomain: "REPLACE.firebaseapp.com",
-    databaseURL: "https://REPLACE-default-rtdb.firebaseio.com",
-    projectId: "REPLACE",
-    storageBucket: "REPLACE.appspot.com",
-    messagingSenderId: "123456789",
-    appId: "1:123456789:web:abc"
+    apiKey: "AIzaSyB19__OdQ6gHWW-Wmari2jMVZfa-P5qe0E",
+    authDomain: "ens-connect-2026-e563b.firebaseapp.com",
+    databaseURL: "https://ens-connect-2026-e563b-default-rtdb.firebaseio.com",
+    projectId: "ens-connect-2026-e563b",
+    storageBucket: "ens-connect-2026-e563b.firebasestorage.app",
+    messagingSenderId: "382030495866",
+    appId: "1:382030495866:web:5c42bf76bff50623ed3bc3"
   };
-
-  if(firebaseConfig.apiKey.includes("REPLACE")){
-    document.getElementById('cloudBadge').innerText='● Setup Firebase Config';
-    document.getElementById('cloudBadge').style.background='#ff9800';
-    document.getElementById('statusBar').innerText='⚠️ Firebase config not set - Add your config from firebase.google.com - Buttons still work offline 5h';
-    document.getElementById('statusBar').style.background='#ff9800';
-    return;
-  }
 
   const app=initializeApp(firebaseConfig);
   const db=getDatabase(app);
 
   document.getElementById('cloudBadge').innerText='● Cloud Sync ON - Fast!';
   document.getElementById('cloudBadge').style.background='#00c851';
-  document.getElementById('statusBar').innerText='☁️ ONLINE • Cloud Sync Fast • Offline 5h cache • Real-time for 20 members';
+  document.getElementById('statusBar').innerText='☁️ CLOUD ON • Fast sync • Offline 5h cache • Real-time for 20 members • '+users.length+'/20';
   document.getElementById('statusBar').style.background='#00c851';
+  document.getElementById('feed').insertAdjacentHTML('afterbegin','<div class="card" style="border-left:4px solid #00c851;background:#e8f5e9"><b>☁️ Firebase Cloud Connected!</b><br>Project: ens-connect-2026-e563b<br>Now friend joins via link → Auto sync → No double add needed!</div>');
 
-  // Sync users
+  // Push local users to cloud
   users.forEach(function(u){
     set(ref(db,'ens2026/users/'+u.email.replace(/[^a-zA-Z0-9]/g,'_')), u);
   });
+
+  window.pushUser=function(u){
+    set(ref(db,'ens2026/users/'+u.email.replace(/[^a-zA-Z0-9]/g,'_')), u);
+  };
+
+  // Listen for new users
   onValue(ref(db,'ens2026/users'), function(snap){
     if(snap.exists()){
       var cloudUsers=Object.values(snap.val());
       var merged=[...users];
-      cloudUsers.forEach(function(cu){ if(!merged.find(function(x){return x.email==cu.email;})) merged.push(cu); });
+      var newOnes=[];
+      cloudUsers.forEach(function(cu){
+        if(!merged.find(function(x){return x.email==cu.email;})){
+          merged.push(cu); newOnes.push(cu);
+        }
+      });
       if(merged.length>users.length){
         users=merged; localStorage.setItem('users20',JSON.stringify(users));
         document.getElementById('mc').innerText=users.length;
-        document.getElementById('feed').insertAdjacentHTML('afterbegin','<div class="card" style="border-left:4px solid #00c851"><b>☁️ New member joined via cloud!</b> Now '+users.length+'/20</div>');
+        document.getElementById('statusBar').innerText='☁️ CLOUD ON • New member! Now '+users.length+'/20 • '+newOnes.map(function(x){return x.email;}).join(', ');
+        document.getElementById('feed').insertAdjacentHTML('afterbegin','<div class="card" style="border-left:4px solid #00c851"><b>☁️ New member joined via cloud!</b><br>'+newOnes.map(function(x){return x.name+' ('+x.email+')';}).join('<br>')+'<br>Now '+users.length+'/20</div>');
       }
     }
   });
 
-  // Global push functions
   window.firebasePush=function(m,to){
     try{
       push(ref(db,'ens2026/chats/'+m.from.replace(/[^a-zA-Z0-9]/g,'_')+'/'+to.replace(/[^a-zA-Z0-9]/g,'_')), m);
@@ -155,21 +161,34 @@ setTimeout(async ()=>{
   window.firebasePushStory=function(s){ try{ push(ref(db,'ens2026/stories'), s); }catch(e){} };
   window.firebasePushPost=function(p){ try{ push(ref(db,'ens2026/posts'), p); }catch(e){} };
 
-  // Listen posts/stories
-  onValue(ref(db,'ens2026/posts'), function(snap){
+  // Listen chats for current user
+  onValue(ref(db,'ens2026/chats/'+current.email.replace(/[^a-zA-Z0-9]/g,'_')), function(snap){
     if(snap.exists()){
-      var posts=Object.values(snap.val()).slice(-10).reverse();
-      posts.forEach(function(p){
-        if(p.email!=current.email) document.getElementById('feed').insertAdjacentHTML('afterbegin','<div class="card" style="border-left:4px solid #00c851"><b>☁️ '+p.name+'</b><br>'+p.text+'<br><small>Cloud sync</small></div>');
+      var cloudChats=snap.val();
+      Object.keys(cloudChats).forEach(function(other){
+        var msgs=Object.values(cloudChats[other]);
+        msgs.forEach(function(msg){
+          var realEmail=other.replace(/_/g,'.').replace(/\.([^.]*)$/,'@$1'); // approximate
+          // find actual email by matching
+          var matched=users.find(function(u){ return u.email.replace(/[^a-zA-Z0-9]/g,'_')==other; });
+          if(matched) realEmail=matched.email;
+          if(!chats[realEmail]) chats[realEmail]=[];
+          if(!chats[realEmail].find(function(x){return x.time==msg.time && x.text==msg.text;})){
+            chats[realEmail].push(msg);
+          }
+        });
       });
+      localStorage.setItem('chats',JSON.stringify(chats));
     }
   });
 
  }catch(e){
-  document.getElementById('cloudBadge').innerText='● Cloud Offline - Local Only';
+  document.getElementById('cloudBadge').innerText='● Cloud Error - Enable Database';
   document.getElementById('cloudBadge').style.background='#ff3040';
-  console.log('Firebase failed, local mode active',e);
+  document.getElementById('statusBar').innerText='⚠️ Enable Realtime Database: Firebase console → Build → Realtime Database → Create → Test mode';
+  document.getElementById('statusBar').style.background='#ff3040';
+  console.log(e);
  }
-}, 2000); // Load after 2 sec - buttons already touchable!
+}, 1500);
 </script>
 </body></html>
