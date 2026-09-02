@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ENS CONNECT - Facebook</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#f0f2f5;font-family:Helvetica,Arial,sans-serif}
+.fb-header{position:sticky;top:0;z-index:100;background:#fff;display:flex;justify-content:space-between;align-items:center;padding:8px 16px;box-shadow:0 1px 2px #0002}
+.fb-logo{font-size:28px;font-weight:900;color:#0866ff;letter-spacing:-1px}
+.fb-nav{display:flex;gap:24px;font-size:24px}
+.fb-nav div{padding:8px 24px;border-radius:8px;cursor:pointer}.fb-nav div.active{color:#0866ff;border-bottom:3px solid #0866ff}
+.page{display:none;max-width:600px;margin:0 auto;padding-bottom:70px}.page.active{display:block}
+.story-bar{display:flex;gap:8px;padding:12px;background:#fff;overflow-x:auto;margin:8px 0;border-radius:8px;box-shadow:0 1px 2px #0001}
+.story{flex-shrink:0;width:110px;height:190px;border-radius:10px;position:relative;overflow:hidden;background:#000;cursor:pointer}
+.story img{width:100%;height:100%;object-fit:cover}
+.story.add{position:absolute;bottom:30px;left:50%;transform:translateX(-50%);width:32px;height:32px;background:#0866ff;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;border:3px solid #fff;font-size:18px}
+.create-post{background:#fff;padding:12px;border-radius:8px;margin:8px 0;display:flex;gap:10px;box-shadow:0 1px 2px #0001}
+.create-post input{flex:1;background:#f0f2f5;border:0;padding:10px 14px;border-radius:20px}
+.post{background:#fff;border-radius:8px;margin:8px 0;box-shadow:0 1px 2px #0001;overflow:hidden}
+.post-head{padding:12px;display:flex;gap:10px;align-items:center}
+.post-head b{font-size:15px}.post-head small{color:#65676b;font-size:12px}
+.post-text{padding:0 12px 12px;font-size:15px}
+.post-img{width:100%;max-height:400px;object-fit:cover}
+.actions{display:flex;justify-content:space-around;padding:8px;border-top:1px solid #e4e6eb}
+.actions span{padding:8px 16px;border-radius:6px;cursor:pointer;display:flex;align-items:center;gap:6px;color:#65676b;font-weight:600;font-size:14px}.actions span:active{background:#f2f2f2}
+.fab-menu{position:fixed;bottom:0;left:0;right:0;background:#fff;display:flex;justify-content:space-around;padding:8px 0;border-top:1px solid #ddd;z-index:50}
+.fab-menu div{text-align:center;font-size:11px;color:#65676b;cursor:pointer}.fab-menu div.active{color:#0866ff}
+.contacts-bar{position:fixed;right:10px;top:80px;width:200px;display:none}
+@media(min-width:900px){.contacts-bar{display:block}}
+.av{width:40px;height:40px;border-radius:50%;background:#0866ff;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;overflow:hidden;flex-shrink:0}
+.av img{width:100%;height:100%;object-fit:cover}
+</style></head><body>
+
+<div class="fb-header">
+<div style="display:flex;align-items:center;gap:10px"><div class="fb-logo">ens</div><div style="background:#f0f2f5;padding:8px 12px;border-radius:20px;display:flex;align-items:center;gap:6px"><span>🔍</span><span style="color:#65676b;font-size:14px">Search ENS CONNECT</span></div></div>
+<div class="fb-nav">
+<div class="active">🏠</div><div>👥</div><div>📺</div><div>🏪</div><div>🔔<span style="background:#e41e3f;color:#fff;font-size:11px;padding:2px 6px;border-radius:10px;position:relative;top:-10px">9+</span></div><div>☰</div>
+</div>
+<div style="display:flex;gap:8px"><div class="av"><img src="https://i.pravatar.cc/100?img=12"></div></div>
+</div>
+
+<!-- FEED PAGE -->
+<div id="pg-feed" class="page active">
+
+<div class="story-bar">
+<div class="story" onclick="addStory()"><img src="https://i.pravatar.cc/200?img=12"><div class="add">+</div><div style="position:absolute;bottom:6px;left:6px;color:#fff;font-size:12px;font-weight:600;background:#0008;padding:2px 6px;border-radius:4px">Create story</div></div>
+<div class="story"><img src="https://i.pravatar.cc/200?img=32"><div style="position:absolute;top:8px;left:8px;width:36px;height:36px;border:3px solid #0866ff;border-radius:50%;overflow:hidden"><img src="https://i.pravatar.cc/100?img=32"></div><div style="position:absolute;bottom:6px;left:6px;color:#fff;font-size:12px;font-weight:600">Becky</div></div>
+<div class="story"><img src="https://i.pravatar.cc/200?img=8"><div style="position:absolute;top:8px;left:8px;width:36px;height:36px;border:3px solid #0866ff;border-radius:50%;overflow:hidden"><img src="https://i.pravatar.cc/100?img=8"></div><div style="position:absolute;bottom:6px;left:6px;color:#fff;font-size:12px">Kelvin</div></div>
+<div class="story"><img src="https://i.pravatar.cc/200?img=15"><div style="position:absolute;top:8px;left:8px;width:36px;height:36px;border:3px solid #0866ff;border-radius:50%;overflow:hidden"><img src="https://i.pravatar.cc/100?img=15"></div><div style="position:absolute;bottom:6px;left:6px;color:#fff">Dr Okore</div></div>
+<div class="story"><img src="https://i.pravatar.cc/200?img=11"><div style="position:absolute;top:8px;left:8px;width:36px;height:36px;border:3px solid #0866ff;border-radius:50%;overflow:hidden"><img src="https://i.pravatar.cc/100?img=11"></div><div style="position:absolute;bottom:6px;left:6px;color:#fff;font-size:12px">Amos</div></div>
+</div>
+
+<div class="create-post">
+<div class="av"><img src="https://i.pravatar.cc/100?img=12"></div>
+<input id="postInput" placeholder="What's on your mind, ENS 2026?" onclick="createPost()">
+<div style="color:#f3425f;font-size:24px">📷</div>
+</div>
+
+<div style="background:#fff;padding:8px;border-radius:8px;margin:8px 0;display:flex;justify-content:space-around;box-shadow:0 1px 2px #0001">
+<div>🔴 Live video</div><div>🖼️ Photo</div><div>😊 Feeling</div>
+</div>
+
+<div id="feed">
+
+<div class="post">
+<div class="post-head"><div class="av"><img src="https://i.pravatar.cc/100?img=12"></div><div style="flex:1"><b>Amos Nyongesa - ENS 2026 Class Rep</b><br><small>2h • 🌍</small></div><div>⋯</div></div>
+<div class="post-text">📚 ENS 2026 OFFICIAL UPDATE:<br><br>Tomorrow CAT for ENS 582 at 9am in LH 5. All students must attend. Materials have been uploaded to ENS CONNECT.<br><br>#UoN #ENS2026</div>
+<img class="post-img" src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=600">
+<div style="padding:8px 12px;display:flex;justify-content:space-between;color:#65676b;font-size:14px"><span>👍❤️ 124 • 45 comments</span><span>12 shares</span></div>
+<div class="actions"><span onclick="like(this)">👍 Like</span><span>💬 Comment</span><span>↗️ Share</span></div>
+</div>
+
+<div class="post">
+<div class="post-head"><div class="av"><img src="https://i.pravatar.cc/100?img=32"></div><div style="flex:1"><b>Becky Wambui</b><br><small>5h • 👥 ENS 2026</small></div><div>⋯</div></div>
+<div class="post-text">Lab session today was amazing! 🧪 Finally understood titration 😍 Thanks Dr Okore!</div>
+<img class="post-img" src="https://images.unsplash.com/photo-1532094349884-543bc11b234d?w=600">
+<div class="actions"><span onclick="like(this)">👍 Like</span><span>💬 Comment</span><span>↗️ Share</span></div>
+</div>
+
+<div class="post">
+<div class="post-head"><div class="av">ENS</div><div style="flex:1"><b>ENS Labs - Official Page</b><br><small>Sponsored • 🌍</small></div><div>⋯</div></div>
+<div class="post-text">Join ENS CONNECT 2026 - All class materials, past papers, free calls & chats in one app! Developed by ENS students for ENS students.</div>
+<div style="padding:12px"><button style="width:100%;padding:10px;background:#0866ff;color:#fff;border:0;border-radius:6px;font-weight:700">Download ENS CONNECT</button></div>
+</div>
+
+</div>
+
+</div>
+
+<!-- FRIENDS PAGE -->
+<div id="pg-friends" class="page">
+<div style="background:#fff;padding:16px;border-radius:8px;margin:8px">
+<h3>Friends • 124 ENS Students</h3>
+<div style="display:flex;gap:8px;margin:12px 0"><button style="flex:1;padding:8px;background:#e7f3ff;color:#0064d1;border:0;border-radius:6px;font-weight:600">Suggestions</button><button style="flex:1;padding:8px;background:#f0f2f5;border:0;border-radius:6px">Your Friends</button></div>
+<div id="friendsList"></div>
+</div>
+</div>
+
+<!-- GROUPS PAGE -->
+<div id="pg-groups" class="page">
+<div style="background:#fff;padding:16px;border-radius:8px;margin:8px">
+<h3>ENS 2026 Groups</h3>
+<div style="margin-top:12px">
+<div style="display:flex;gap:10px;padding:12px;border-bottom:1px solid #eee"><div class="av">👥</div><div><b>ENS 2026 Official Group</b><br><small>124 members • 24 posts today</small></div><button style="margin-left:auto;background:#0866ff;color:#fff;border:0;padding:6px 12px;border-radius:6px">Joined</button></div>
+<div style="display:flex;gap:10px;padding:12px;border-bottom:1px solid #eee"><div class="av">📚</div><div><b>ENS 582 Materials</b><br><small>89 members</small></div><button style="margin-left:auto;background:#e4e6eb;border:0;padding:6px 12px;border-radius:6px">Join</button></div>
+<div style="display:flex;gap:10px;padding:12px"><div class="av">🎓</div><div><b>ENS Past Papers</b><br><small>200+ members</small></div><button style="margin-left:auto;background:#e4e6eb;border:0;padding:6px 12px;border-radius:6px">Join</button></div>
+</div>
+</div>
+</div>
+
+<div class="fab-menu">
+<div class="active" onclick="openFB('feed')"><div style="font-size:22px">🏠</div>Home</div>
+<div onclick="openFB('friends')"><div style="font-size:22px">👥</div>Friends</div>
+<div onclick="openFB('groups')"><div style="font-size:22px">👥</div>Groups</div>
+<div onclick="alert('Marketplace: Buy/Sell ENS books')"><div style="font-size:22px">🏪</div>Marketplace</div>
+<div onclick="alert('Notifications: 9+ new')"><div style="font-size:22px">🔔</div>Notifications</div>
+<div onclick="alert('Menu: Settings, Logout')"><div style="font-size:22px">☰</div>Menu</div>
+</div>
+
+<input type="file" id="storyFile" hidden accept="image/*" onchange="uploadStory(this)">
+
+<script>
+let posts = JSON.parse(localStorage.getItem('ens_fb_posts')||'[]');
+function openFB(t){
+ document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+ document.getElementById('pg-'+t).classList.add('active');
+ document.querySelectorAll('.fab-menu div').forEach(d=>d.classList.remove('active'));
+ event.currentTarget.classList.add('active');
+ if(t=='friends') loadFriends();
+}
+function createPost(){
+ let text = prompt('What is on your mind? Share with ENS 2026:','');
+ if(!text) return;
+ let img = prompt('Image URL (optional):','');
+ let p = {text:text, img:img, name:'You', time:'Just now', likes:0};
+ posts.unshift(p);
+ localStorage.setItem('ens_fb_posts',JSON.stringify(posts));
+ addPostToFeed(p, true);
+}
+function addPostToFeed(p, top=false){
+ let feed = document.getElementById('feed');
+ let div = document.createElement('div');
+ div.className='post';
+ div.innerHTML=`
+  <div class="post-head"><div class="av">Y</div><div style="flex:1"><b>${p.name}</b><br><small>${p.time} • 🌍</small></div><div>⋯</div></div>
+  <div class="post-text">${p.text}</div>
+  ${p.img?`<img class="post-img" src="${p.img}">`:''}
+  <div class="actions"><span onclick="like(this)">👍 Like (${p.likes})</span><span>💬 Comment</span><span>↗️ Share</span></div>
+ `;
+ if(top) feed.prepend(div); else feed.appendChild(div);
+}
+function like(el){
+ let num = parseInt(el.innerText.match(/\d+/)||0)+1;
+ el.innerText = '👍 Liked ('+num+')';
+ el.style.color='#0866ff';
+}
+function addStory(){document.getElementById('storyFile').click();}
+function uploadStory(input){
+ let file = input.files[0]; if(!file) return;
+ alert('✅ Story uploaded! Visible for 24h to ENS 2026');
+}
+function loadFriends(){
+ let friends = [
+  {n:'Amos Nyongesa',mutual:12},{n:'Becky Wambui',mutual:8},{n:'Kelvin Ochieng',mutual:15},{n:'Dr Okore',mutual:2},{n:'Linet Achieng',mutual:5},{n:'John ENS',mutual:9}
+ ];
+ let list = document.getElementById('friendsList');
+ list.innerHTML = friends.map(f=>`
+  <div style="display:flex;gap:10px;padding:10px 0;border-bottom:1px solid #eee">
+   <div class="av">${f.n[0]}</div>
+   <div style="flex:1"><b>${f.n}</b><br><small>${f.mutual} mutual friends • ENS 2026</small></div>
+   <button style="background:#0866ff;color:#fff;border:0;padding:6px 12px;border-radius:6px">Add</button>
+   <button style="background:#e4e6eb;border:0;padding:6px 12px;border-radius:6px">Remove</button>
+  </div>
+ `).join('');
+}
+// load saved posts
+posts.forEach(p=>addPostToFeed(p));
+</script>
+</body></html>
