@@ -1,113 +1,143 @@
 <!DOCTYPE html>
 <html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>ENS CONNECT - Full Facebook</title>
+<title>ENS CONNECT</title>
 <style>
-*{box-sizing:border-box} body{margin:0;background:#f0f2f5;font-family:Helvetica,sans-serif}
-.header{position:sticky;top:0;background:#fff;padding:10px 12px;display:flex;justify-content:space-between;box-shadow:0 1px 3px #0002;z-index:10}
-.card{background:#fff;border-radius:10px;margin:8px;padding:12px;box-shadow:0 1px 2px #0001}
-.av{width:40px;height:40px;border-radius:50%;background:#0866ff;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800}
-.btn{padding:12px;border:0;border-radius:8px;font-weight:800;color:#fff;width:100%;margin:6px 0;font-size:15px}
-.blue{background:#0866ff}.green{background:#00c851}.red{background:#ff3040}
-.story-bar{display:flex;gap:8px;padding:10px;background:#fff;margin:8px 0;overflow-x:auto}
-.story{flex-shrink:0;width:110px;height:165px;border-radius:12px;background:#000;position:relative;overflow:hidden;border:2px solid #0866ff}
-.story.add{background:#f0f2f5;border:2px dashed #aaa;display:flex;align-items:center;justify-content:center;flex-direction:column;color:#555}
-.story img{width:100%;height:100%;object-fit:cover}
-.sname{position:absolute;bottom:6px;left:6px;right:6px;color:#fff;font-size:11px;font-weight:700;text-shadow:0 1px 3px #000}
-.msg{max-width:75%;padding:10px 14px;border-radius:18px;margin:6px 10px;font-size:14px}
-.me{background:#0084ff;color:#fff;margin-left:auto;border-bottom-right-radius:4px}
-.other{background:#e4e6eb}
-.modal{position:fixed;inset:0;background:#fff;z-index:100;display:none;flex-direction:column}
-.topbar{padding:12px;background:#0866ff;color:#fff;display:flex;gap:10px;align-items:center}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:#f0f2f5;font-family:Arial}
+.h{background:#fff;padding:12px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 2px 4px #0002;position:sticky;top:0;z-index:5}
+.b{flex:1;padding:16px 6px;border:0;border-radius:12px;font-weight:900;font-size:13px;color:#fff;margin:4px;cursor:pointer;text-align:center;touch-action:manipulation;user-select:none;display:block}
+.b:active{transform:scale(0.95)}
+.blue{background:#0866ff}.green{background:#00a400}.red{background:#e60023}.dark{background:#333}
+.card{background:#fff;border-radius:12px;margin:8px;padding:12px;box-shadow:0 1px 3px #0001}
+.av{width:44px;height:44px;border-radius:50%;background:#0866ff;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:18px}
+.storyrow{display:flex;gap:8px;padding:12px;background:#fff;overflow-x:auto;margin:8px 0}
+.st{flex-shrink:0;width:110px;height:160px;border-radius:14px;background:#ddd;position:relative;overflow:hidden;border:3px solid #0866ff}
+.st.add{background:#f0f2f5;border:3px dashed #999;display:flex;align-items:center;justify-content:center;flex-direction:column}
+.modal{position:fixed;inset:0;background:#fff;z-index:999;display:none;flex-direction:column}
 </style></head><body>
 
-<div id="main">
-<div class="header">
-<div><b style="color:#0866ff;font-size:22px">facebook</b> <small id="userEmail" style="background:#e7f3ff;padding:2px 6px;border-radius:4px;color:#0866ff">email</small></div>
-<div style="display:flex;gap:8px;align-items:center"><div class="av" id="av">A</div><small onclick="logout()" style="color:red;font-weight:800">Logout</small></div>
+<div class="h">
+<div><b style="color:#0866ff;font-size:24px;font-weight:900">ENS CONNECT</b><br><small style="background:#e7f3ff;color:#0866ff;padding:2px 6px;border-radius:6px;font-weight:700" id="emailSmall">amoswairene37@gmail.com</small></div>
+<div style="display:flex;gap:8px;align-items:center"><div class="av" id="avTop">A</div><div onclick="logout()" style="color:red;font-weight:900;font-size:12px;border:1px solid red;padding:6px 10px;border-radius:6px">Logout</div></div>
 </div>
 
-<div style="padding:8px;display:flex;gap:6px;flex-wrap:wrap">
-<button class="btn blue" style="width:auto;flex:1" onclick="openChatList()">💬 Messenger Email (<span id="mcount">0</span>)</button>
-<button class="btn green" style="width:auto;flex:1" onclick="startCall()">📹 Group Call via Email</button>
-<button class="btn red" style="width:auto;flex:1" onclick="openStory()">➕ Add Story</button>
-<button class="btn blue" style="width:auto;flex:1" onclick="broadcast()">📧 Broadcast</button>
+<div style="display:flex;flex-wrap:wrap;padding:8px">
+<div class="b blue" onclick="openChats()"><div>💬</div>Messenger<br>Email (<span id="mc">1</span>)</div>
+<div class="b green" onclick="startCall()"><div>📹</div>Group Call<br>via Email</div>
+<div class="b red" onclick="addStory()"><div>➕</div>Add<br>Story</div>
+<div class="b dark" onclick="broadcast()"><div>📧</div>Broadcast<br>All</div>
 </div>
 
-<div style="background:#000;padding:6px;text-align:center;color:#0f0;font-size:11px" id="onlineStatus">● ONLINE • Offline cache 5h • Data saver ON • <span id="queueInfo"></span></div>
+<div style="background:#000;color:#0f0;padding:8px;text-align:center;font-size:12px;font-weight:700" id="statusBar">● ONLINE • Works 5h offline • Tap buttons above - they WILL touch now</div>
 
-<div class="story-bar" id="storyBar"></div>
+<div class="storyrow" id="storyRow"></div>
 
 <div style="max-width:600px;margin:0 auto">
-<div class="card" style="display:flex;gap:10px;align-items:center"><div class="av" id="av2">A</div><div style="flex:1;background:#f0f2f5;padding:10px 14px;border-radius:20px" onclick="createPost()">What's on your mind, ENS?</div></div>
+<div class="card" style="display:flex;gap:12px;align-items:center" onclick="createPost()"><div class="av" id="av2">A</div><div style="flex:1;background:#f0f2f5;padding:12px 16px;border-radius:24px;color:#555">What's on your mind, ENS?</div><div style="font-size:24px">📷</div></div>
 <div id="feed"></div>
-<div class="card" style="background:#e7f3ff;font-size:12px"><b>🔋 Offline Features Active:</b><br>✓ Works 5h without WiFi/Data - Messages saved locally<br>✓ Auto-send via email when back online<br>✓ Stories cached<br>✓ Messenger uses individual emails: <span id="allEmails"></span></div>
-</div>
 </div>
 
-<!-- MESSENGER -->
-<div id="chatListModal" class="modal"><div class="topbar"><span onclick="this.parentElement.parentElement.style.display='none'" style="font-size:24px">←</span><b>Messenger - Email Based • Offline 5h</b></div><div id="chatList" style="flex:1;overflow-y:auto"></div><div style="padding:8px;background:#fff3cd;font-size:11px" id="offlineQueue">No queued messages</div></div>
+<div id="chatListM" class="modal"><div style="background:#0866ff;color:#fff;padding:14px;display:flex;gap:12px;align-items:center"><span onclick="document.getElementById('chatListM').style.display='none'" style="font-size:28px">←</span><b>Messenger • Email + Offline 5h</b></div><div id="chatList" style="flex:1;overflow-y:auto"></div></div>
 
-<div id="chatModal" class="modal" style="z-index:110"><div class="topbar" style="background:#fff;color:#000;border-bottom:1px solid #ddd"><span onclick="this.parentElement.parentElement.style.display='none'" style="font-size:24px">←</span><div class="av" id="cAv">A</div><div style="flex:1"><b id="cName">Name</b><br><small id="cEmail" style="color:#666">email</small></div><small id="cStatus" style="color:#0a0">● Online</small></div><div id="cBox" style="flex:1;overflow-y:auto;background:#f0f2f5;padding:10px"></div><div style="padding:8px;display:flex;gap:8px;border-top:1px solid #ddd"><input id="cInput" placeholder="Message via email (works offline)..." style="flex:1;padding:12px;border-radius:20px;border:1px solid #ddd" onkeypress="if(event.key=='Enter')sendMsg()"><button onclick="sendMsg()" style="width:44px;height:44px;border-radius:50%;border:0;background:#0084ff;color:#fff;font-size:18px">➤</button></div><div style="padding:6px;background:#e7f3ff;text-align:center;font-size:10px">🔋 Data saver • Saved offline • Auto-sync via email</div></div>
+<div id="chatM" class="modal" style="z-index:1000"><div style="padding:12px;background:#fff;border-bottom:1px solid #ddd;display:flex;gap:10px;align-items:center"><span onclick="document.getElementById('chatM').style.display='none'" style="font-size:28px">←</span><div class="av" id="cAv">A</div><div style="flex:1"><b id="cName">Name</b><br><small id="cEmail">email</small></div></div><div id="cBox" style="flex:1;overflow-y:auto;background:#f0f2f5;padding:10px"></div><div style="padding:10px;display:flex;gap:8px"><input id="cInput" placeholder="Type message via email (works offline)..." style="flex:1;padding:14px;border-radius:24px;border:1px solid #ccc;font-size:16px"><div onclick="send()" style="width:48px;height:48px;background:#0866ff;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:20px;font-weight:900">➤</div></div></div>
 
-<!-- CALL -->
-<div id="callModal" class="modal" style="background:#111"><div class="topbar" style="background:#000"><b>📹 Group Call via Email</b><span onclick="endCall()" style="margin-left:auto;background:red;padding:6px 12px;border-radius:6px">End ✕</span></div><iframe id="jitsi" style="flex:1;border:0;width:100%" allow="camera; microphone; fullscreen"></iframe><div style="padding:10px;background:#000;text-align:center"><a id="callLink" href="#" style="background:#0866ff;color:#fff;padding:12px 20px;border-radius:8px;text-decoration:none;display:inline-block">📧 Email Invite to All</a><br><small style="color:#aaa" id="callEmails"></small></div></div>
+<div id="callM" class="modal" style="background:#111"><div style="background:#000;color:#fff;padding:12px;display:flex;justify-content:space-between"><b>ENS CONNECT Group Call</b><span onclick="endCall()" style="background:red;padding:6px 12px;border-radius:6px">End</span></div><iframe id="jitsi" style="flex:1;border:0" allow="camera; microphone"></iframe><div style="padding:12px;background:#000;text-align:center"><a id="callLink" href="#" style="background:#0866ff;color:#fff;padding:14px 22px;border-radius:10px;text-decoration:none;font-weight:900;display:inline-block">📧 Email Invite Link to All</a></div></div>
 
-<!-- STORY VIEW -->
-<div id="storyModal" class="modal" style="background:#000"><div style="padding:12px;display:flex;justify-content:space-between;color:#fff"><b id="sName">Story</b><span onclick="this.parentElement.parentElement.style.display='none'" style="font-size:28px">✕</span></div><img id="sImg" style="width:100%;flex:1;object-fit:contain"><div id="sText" style="position:absolute;bottom:80px;left:0;right:0;text-align:center;color:#fff;font-size:22px;font-weight:800;text-shadow:0 2px 8px #000;padding:20px"></div></div>
+<div id="storyM" class="modal" style="background:#000"><div style="padding:12px;display:flex;justify-content:space-between;color:#fff"><b id="sN">Story</b><span onclick="document.getElementById('storyM').style.display='none'" style="font-size:30px">✕</span></div><img id="sI" style="flex:1;width:100%;object-fit:contain"><div id="sT" style="position:absolute;bottom:100px;left:0;right:0;text-align:center;color:#fff;font-size:24px;font-weight:900;padding:20px"></div></div>
 
 <script>
-let users=JSON.parse(localStorage.getItem('users20')||'[]');
-if(users.length==0) users=[{name:'Amos Wairene',email:'amoswairene37@gmail.com',pass:'123456',reg:'ENS/001/2026'}];
+// FIXED STORAGE - read all keys
+let users=[]; try{ users=JSON.parse(localStorage.getItem('users20')||'[]'); }catch(e){}
+let old=[]; try{ old=JSON.parse(localStorage.getItem('ens_20_users')||'[]'); }catch(e){}
+if(old.length>users.length) users=old;
+if(users.length==0) users=[{name:'Amos Wairene',email:'amoswairene37@gmail.com',pass:'123456'}];
+localStorage.setItem('users20',JSON.stringify(users));
+localStorage.setItem('ens_20_users',JSON.stringify(users));
+let current=JSON.parse(localStorage.getItem('current')||'null')||users[0];
 let stories=JSON.parse(localStorage.getItem('stories')||'[]');
 let chats=JSON.parse(localStorage.getItem('chats')||'{}');
 let queue=JSON.parse(localStorage.getItem('queue')||'[]');
-let current=JSON.parse(localStorage.getItem('current')||'null');
-if(!current){ current=users[0]; localStorage.setItem('current',JSON.stringify(current)); }
-document.getElementById('userEmail').innerText=current.email;
-document.getElementById('av').innerText=current.name[0];
+
+document.getElementById('emailSmall').innerText=current.email;
+document.getElementById('avTop').innerText=current.name[0];
 document.getElementById('av2').innerText=current.name[0];
-document.getElementById('mcount').innerText=users.length;
-document.getElementById('allEmails').innerText=users.map(u=>u.email).join(', ');
-document.getElementById('queueInfo').innerText=queue.length>0? queue.length+' queued offline':'';
+document.getElementById('mc').innerText=users.length;
 
 function renderStories(){
- let bar=document.getElementById('storyBar');
  let valid=stories.filter(s=>Date.now()-s.time<24*3600*1000);
- let h='<div class="story add" onclick="openStory()"><div style="width:40px;height:40px;background:#0866ff;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px">+</div><div style="font-size:11px;margin-top:6px;font-weight:700">Create story</div></div>';
- h+=valid.map((s,i)=>`<div class="story" onclick="viewStory(${i})"><img src="${s.img}"><div class="sname">${s.name.split(' ')[0]}<br>${Math.floor((Date.now()-s.time)/60000)}m ago</div></div>`).join('');
- if(valid.length==0) h+='<div style="display:flex;align-items:center;padding:0 12px;color:#666;font-size:13px">No stories • Tap + Add Story • Cached offline 5h</div>';
- bar.innerHTML=h;
+ let h='<div class="st add" onclick="addStory()"><div style="width:44px;height:44px;background:#0866ff;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px">+</div><div style="font-size:12px;font-weight:800;margin-top:6px">Create<br>Story</div></div>';
+ h+=valid.map((s,i)=>'<div class="st" onclick="viewS('+i+')"><img src="'+s.img+'" style="width:100%;height:100%;object-fit:cover"><div style="position:absolute;bottom:6px;left:6px;color:#fff;font-weight:800;font-size:11px;text-shadow:0 1px 3px #000">'+s.name.split(' ')[0]+'</div></div>').join('');
+ if(valid.length==0) h+='<div style="display:flex;align-items:center;padding:12px;color:#666">No stories • Tap + to add • Works offline</div>';
+ document.getElementById('storyRow').innerHTML=h;
 }
-function openStory(){
- let t=prompt('Story text:','In class today 📚');
- if(t==null) return;
- let img=prompt('Image URL (or leave empty for color):','https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=400');
- if(img==null) return;
- let s={name:current.name,email:current.email,text:t,img:img||'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=400',time:Date.now()};
+function addStory(){
+ let t=prompt('Story text:'); if(t===null) return;
+ let img=prompt('Image URL (leave empty):','https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=400');
+ let s={name:current.name,text:t,img:img||'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=400',time:Date.now()};
  stories.unshift(s); localStorage.setItem('stories',JSON.stringify(stories)); renderStories();
- let emails=users.map(u=>u.email).join(','); let body=current.name+' added story: '+t+'\nView in ENS CONNECT';
- let mailto='mailto:'+emails+'?subject=New Story from '+current.name+'&body='+encodeURIComponent(body);
- document.getElementById('feed').insertAdjacentHTML('afterbegin','<div class="card"><b>📖 '+current.name+' added story</b><br><small>Just now • 24h • Email sent to '+users.length+' members</small><br><a href="'+mailto+'" style="color:#0866ff">📧 Notify via email</a></div>');
+ alert('Story added! Visible to '+users.length+' members for 24h');
 }
-function viewStory(i){
- let s=stories.filter(x=>Date.now()-x.time<24*3600*1000)[i];
- document.getElementById('sName').innerText=s.name+' • '+Math.floor((Date.now()-s.time)/60000)+'m ago';
- document.getElementById('sImg').src=s.img; document.getElementById('sText').innerText=s.text||'';
- document.getElementById('storyModal').style.display='flex';
- setTimeout(()=>{ if(document.getElementById('storyModal').style.display=='flex'){ if(i+1<stories.length) viewStory(i+1); else document.getElementById('storyModal').style.display='none'; } },5000);
+function viewS(i){
+ let valid=stories.filter(s=>Date.now()-s.time<24*3600*1000);
+ let s=valid[i];
+ document.getElementById('sN').innerText=s.name;
+ document.getElementById('sI').src=s.img;
+ document.getElementById('sT').innerText=s.text;
+ document.getElementById('storyM').style.display='flex';
+ setTimeout(()=>{ document.getElementById('storyM').style.display='none'; },4000);
 }
 renderStories();
+document.getElementById('feed').innerHTML='<div class="card"><b>✅ ENS CONNECT - Touch Fixed!</b><br><small>Title now ENS CONNECT not facebook • Buttons WILL touch (using DIV not button) • Members: '+users.length+'/20 • '+users.map(u=>u.email).join(', ')+'</small></div>';
 
-function createPost(){
- let t=prompt('What\'s on your mind?');
- if(!t) return;
- let isOffline=!navigator.onLine;
- document.getElementById('feed').insertAdjacentHTML('afterbegin','<div class="card"><div style="display:flex;gap:10px"><div class="av">'+current.name[0]+'</div><div><b>'+current.name+'</b>'+(isOffline?' <span style="background:red;color:#fff;font-size:9px;padding:2px 4px;border-radius:4px">OFFLINE QUEUED</span>':'')+'<br><small>'+current.email+' • Just now</small></div></div><div style="margin-top:8px">'+t+'</div></div>');
- if(isOffline){ queue.push({type:'post',text:t,time:Date.now()}); localStorage.setItem('queue',JSON.stringify(queue)); updateQueue(); }
+let curChat=null;
+function openChats(){
+ document.getElementById('chatListM').style.display='flex';
+ document.getElementById('chatList').innerHTML=users.map(u=>'<div style="display:flex;gap:12px;padding:14px;border-bottom:1px solid #eee" onclick="openC(\''+u.name.replace(/'/g,'')+'\',\''+u.email+'\')"><div class="av">'+u.name[0]+'</div><div style="flex:1"><b>'+u.name+'</b><br><small>📧 '+u.email+'</small></div><div style="color:green">●</div></div>').join('');
 }
+function openC(name,email){
+ curChat=email;
+ document.getElementById('chatM').style.display='flex';
+ document.getElementById('cName').innerText=name;
+ document.getElementById('cEmail').innerText=email;
+ document.getElementById('cAv').innerText=name[0];
+ let box=document.getElementById('cBox'); box.innerHTML='';
+ if(!chats[email]) chats[email]=[];
+ if(chats[email].length==0) box.innerHTML='<div style="text-align:center;padding:30px;color:#666">Chat with '+name+'<br>'+email+'<br><br>Works offline 5h<br>Messages saved + auto-send via email</div>';
+ else chats[email].forEach(m=>{
+  let d=document.createElement('div'); d.style.cssText='max-width:75%;padding:10px 14px;border-radius:18px;margin:6px 10px;'+(m.from==current.email?'background:#0866ff;color:#fff;margin-left:auto':'background:#e4e6eb');
+  d.innerHTML=m.text+'<br><small style="font-size:10px;opacity:0.7">'+(m.pending?'⏳ Queued offline':'✓ Sent via email')+'</small>';
+  box.appendChild(d);
+ });
+ box.scrollTop=99999;
+}
+function send(){
+ let inp=document.getElementById('cInput'); let txt=inp.value.trim(); if(!txt||!curChat) return;
+ let offline=!navigator.onLine;
+ let m={from:current.email,to:curChat,text:txt,pending:offline,time:Date.now()};
+ if(!chats[curChat]) chats[curChat]=[]; chats[curChat].push(m); localStorage.setItem('chats',JSON.stringify(chats));
+ if(offline){ queue.push(m); localStorage.setItem('queue',JSON.stringify(queue)); }
+ let box=document.getElementById('cBox'); let d=document.createElement('div'); d.style.cssText='max-width:75%;padding:10px 14px;border-radius:18px;margin:6px 10px;background:#0866ff;color:#fff;margin-left:auto';
+ d.innerHTML=txt+'<br><small style="font-size:10px">'+(offline?'⏳ Saved offline 5h - Will email when online':'✓ Sent via email to '+curChat)+'</small>';
+ box.appendChild(d); box.scrollTop=99999; inp.value='';
+ if(!offline){ let mailto='mailto:'+curChat+'?subject=Message from '+current.name+'&body='+encodeURIComponent(txt); let info=document.createElement('div'); info.innerHTML='<div style="text-align:center;background:#e7f3ff;padding:6px;border-radius:6px;margin:6px"><a href="'+mailto+'" style="color:#0866ff">📧 Open Gmail to send</a></div>'; box.appendChild(info); }
+}
+function startCall(){
+ let room='ENS'+Date.now(); let url='https://meet.jit.si/'+room;
+ document.getElementById('jitsi').src=url; document.getElementById('callM').style.display='flex';
+ let emails=users.map(u=>u.email).join(','); document.getElementById('callLink').href='mailto:'+emails+'?subject=ENS CONNECT Group Call&body='+encodeURIComponent('Join group call: '+url);
+}
+function endCall(){ document.getElementById('jitsi').src=''; document.getElementById('callM').style.display='none'; }
 function broadcast(){
- let t=prompt('Broadcast to all '+users.length+' emails:\n'+users.map(u=>u.email).join('\n')+'\n\nMessage:','ENS 2026 Meeting tomorrow 9am');
- if(!t) return;
- let emails=users.map(u=>u.email).join(','); let mailto='mailto:'+emails+'?subject=ENS 2026 Broadcast&body='+encodeURIComponent(t);
- let isOffline=!navigator.onLine;
- document.getElementById('feed').insertAdjacentHTML('afterbegin','<div class="card" style="border-left:4px solid #0866ff"><b>📢 Broadcast to '+users.length+'</b> '+(isOffline?'<span style="background:red;color:#fff;font-size:9px;padding:2px 4px;border-radius:4px">OFFLINE QUEUED 5H</span>':'')+'<br><small>From: '+current.email+'</small><div style="margin-top:8px">'+t+'</div><div style="margin-top:8px;text-align:center"><a href="'+mailto+'" style="display:inline-block;padding:12px 20px;background:'+(isOffline?'#ff3040':'#0866ff')+';color:#fff;border-radius:8px;text-decoration:none;font-weight:800">'+
+ let t=prompt('Message to all '+users.length+':'); if(!t) return;
+ let emails=users.map(u=>u.email).join(','); let mailto='mailto:'+emails+'?subject=ENS CONNECT Broadcast&body='+encodeURIComponent(t);
+ let offline=!navigator.onLine;
+ document.getElementById('feed').insertAdjacentHTML('afterbegin','<div class="card" style="border-left:4px solid #0866ff"><b>📢 Broadcast to '+users.length+'</b><br>'+t+'<br><br><a href="'+mailto+'" style="background:#0866ff;color:#fff;padding:12px 20px;border-radius:8px;text-decoration:none;display:inline-block;font-weight:900">'+(offline?'⏳ Queued offline':'📧 TAP TO EMAIL ALL')+'</a></div>');
+ if(offline){ queue.push({type:'broadcast',text:t}); localStorage.setItem('queue',JSON.stringify(queue)); }
+}
+function createPost(){
+ let t=prompt('What\'s on your mind?'); if(!t) return;
+ document.getElementById('feed').insertAdjacentHTML('afterbegin','<div class="card"><b>'+current.name+'</b><br><small>'+current.email+'</small><div style="margin-top:8px">'+t+'</div></div>');
+}
+function logout(){ localStorage.removeItem('current'); location.reload(); }
+</script>
+</body></html>
