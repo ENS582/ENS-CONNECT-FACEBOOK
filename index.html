@@ -1,189 +1,139 @@
 <!DOCTYPE html>
-<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ENS CONNECT - 20 Members Max</title>
+<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ENS CONNECT - Offline + Messenger</title>
+<link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoiRU5TIENPTk5FQ1QiLCJzaG9ydF9uYW1lIjoiRU5TIiwic3RhcnRfdXJsIjoiLiIsImRpc3BsYXkiOiJzdGFuZGFsb25lIiwiYmFja2dyb3VuZF9jb2xvciI6IiMwODY2ZmYiLCJ0aGVtZV9jb2xvciI6IiMwODY2ZmYiLCJpY29ucyI6W3sic3JjIjoiaHR0cHM6Ly9pLnByYXZhdGFyLmNjLzE5MiIsInNpemVzIjoiMTkyeDE5MiIsInR5cGUiOiJpbWFnZS9wbmcifV19">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 body{background:#f0f2f5;font-family:Helvetica,sans-serif}
 .login-bg{background:linear-gradient(135deg,#0866ff,#00c6ff);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:16px}
-.login-card{background:#fff;width:100%;max-width:420px;border-radius:12px;padding:24px;box-shadow:0 8px 32px #0003}
-.input{width:100%;padding:12px;border:1px solid #dddfe2;border-radius:6px;font-size:14px;margin:6px 0;outline:0}
-.btn{width:100%;padding:12px;border:0;border-radius:6px;font-weight:700;font-size:14px;cursor:pointer}
+.login-card{background:#fff;width:100%;max-width:420px;border-radius:12px;padding:20px;box-shadow:0 8px 32px #0003}
+.input{width:100%;padding:12px;border:1px solid #ddd;border-radius:6px;margin:6px 0;outline:0}
+.btn{width:100%;padding:12px;border:0;border-radius:6px;font-weight:700}
 .btn-blue{background:#0866ff;color:#fff}.btn-green{background:#42b72a;color:#fff}
-.header{background:#fff;display:flex;justify-content:space-between;padding:8px 12px;box-shadow:0 1px 2px #0002;position:sticky;top:0;z-index:100;align-items:center}
-.card{background:#fff;border-radius:8px;margin:8px;box-shadow:0 1px 2px #0001;overflow:hidden;padding:12px}
+.header{position:sticky;top:0;z-index:100;background:#fff;display:flex;justify-content:space-between;padding:8px 12px;box-shadow:0 1px 2px #0002;align-items:center}
+.offline-bar{padding:6px 12px;text-align:center;font-size:12px;font-weight:700;display:none}
+.offline-bar.off{background:#ff3040;color:#fff;display:block}
+.offline-bar.on{background:#00c851;color:#fff;display:block}
+.story-bar{display:flex;gap:8px;padding:10px;background:#fff;margin:8px 0;overflow-x:auto;box-shadow:0 1px 2px #0001;border-radius:8px}
+.story{flex-shrink:0;width:108px;height:180px;border-radius:12px;position:relative;overflow:hidden;background:#000;cursor:pointer;border:2px solid #0866ff}
+.story.add{border:2px dashed #65676b;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#f0f2f5}
+.story img{width:100%;height:100%;object-fit:cover}
+.story .name{position:absolute;bottom:6px;left:6px;right:6px;color:#fff;font-weight:700;font-size:11px;text-shadow:0 1px 3px #000}
+.card{background:#fff;border-radius:8px;margin:8px;box-shadow:0 1px 2px #0001;overflow:hidden;padding:10px}
 .av{width:40px;height:40px;border-radius:50%;background:#0866ff;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;overflow:hidden;flex-shrink:0}
-.badge{font-size:10px;padding:2px 6px;border-radius:4px;background:#e7f3ff;color:#0866ff}
+.modal{position:fixed;inset:0;background:#000c;z-index:200;display:none;align-items:center;justify-content:center;padding:12px}
+.modal-box{background:#fff;width:100%;max-width:500px;border-radius:12px;padding:16px;max-height:90vh;overflow-y:auto}
+.messenger{position:fixed;inset:0;background:#fff;z-index:300;display:none;flex-direction:column}
+.msg{max-width:72%;padding:8px 12px;border-radius:18px;margin:4px 10px;font-size:14px;word-wrap:break-word}
+.msg.me{background:#0084ff;color:#fff;margin-left:auto;border-bottom-right-radius:4px}
+.msg.other{background:#e4e6eb;color:#000;border-bottom-left-radius:4px}
+.msg.pending{opacity:0.6;border:1px dashed #ff3040}
+.data-saver{position:fixed;bottom:80px;left:8px;background:#000d;padding:8px 12px;border-radius:20px;color:#fff;font-size:11px;z-index:80;display:flex;gap:8px;align-items:center}
 </style></head><body>
 
+<div id="offlineBar" class="offline-bar off">📴 OFFLINE MODE - Messages saved locally, will send via email when online (Battery: 5h remaining)</div>
+<div id="onlineBar" class="offline-bar on">🌐 ONLINE - Syncing queued emails...</div>
+
+<!-- LOGIN -->
 <div id="loginPage" class="login-bg">
 <div class="login-card">
-<div style="text-align:center;margin-bottom:16px">
-<div style="font-size:28px;font-weight:900;color:#0866ff">ens<span style="color:#000">CONNECT</span></div>
-<div style="font-size:11px;background:#0866ff;color:#fff;padding:3px 8px;border-radius:12px;display:inline-block;margin-top:4px">MAX 20 MEMBERS • INDIVIDUAL EMAIL</div>
-<p style="color:#606770;margin-top:8px;font-size:13px">Registered: <b id="countTop">0</b>/20 • Each with own email</p>
-</div>
-
-<div id="loginForm">
-<input id="email" class="input" type="email" placeholder="Your Individual Email">
+<div style="text-align:center"><div style="font-size:26px;font-weight:900;color:#0866ff">ensCONNECT</div><div style="font-size:9px;background:#00c851;color:#fff;padding:3px 8px;border-radius:12px;display:inline-block">OFFLINE + EMAIL MESSENGER • MAX 20</div><p style="font-size:11px;color:#65676b;margin-top:6px"><span id="countTop">0</span>/20 • Data Saver • Works offline 5h</p></div>
+<div id="loginForm" style="margin-top:12px">
+<input id="email" class="input" type="email" placeholder="Individual email">
 <input id="password" class="input" type="password" placeholder="Password">
-<button class="btn btn-blue" onclick="login()">Log In with Individual Email</button>
-<div style="text-align:center;margin:10px 0"><a href="#" onclick="forgot()" style="color:#0866ff;font-size:13px;text-decoration:none">Forgot password?</a></div>
-<div style="height:1px;background:#dadde1;margin:12px 0"></div>
-<button class="btn btn-green" onclick="showSignup()">+ Add New Member (Max 20)</button>
-<div style="margin-top:12px;background:#f0f2f5;padding:10px;border-radius:6px;font-size:11px">
-<b>📧 20 Max System:</b><br>
-- Works for 1 to 20 students<br>
-- You have 14 now → Can add up to 6 more<br>
-- Each: own email + own password<br>
-- Broadcast sends to all registered (max 20)
+<button class="btn btn-blue" onclick="login()">Log In</button>
+<div style="height:1px;background:#ddd;margin:12px 0"></div>
+<button class="btn btn-green" onclick="showSignup()">+ Add Member (Max 20)</button>
+<div style="background:#e7f3ff;padding:8px;border-radius:6px;margin-top:10px;font-size:11px"><b>🔋 Offline Features:</b><br>✓ Saves data (no images auto-load)<br>✓ Works 5 hours without WiFi/Data<br>✓ Messages queued & auto-send via email when online<br>✓ Stories cached offline<br>✓ PWA - Install to home screen</div>
 </div>
-</div>
-
-<div id="signupForm" style="display:none">
-<h3 style="text-align:center">Add Member (Max 20)</h3>
-<p style="text-align:center;font-size:12px;color:#65676b;margin:6px 0"><span id="count">0</span>/20 members registered • <span id="remaining">20</span> slots left</p>
-<div style="background:#e7f3ff;padding:8px;border-radius:6px;margin-bottom:8px;text-align:center">
-<div style="width:100%;background:#ddd;height:8px;border-radius:4px;overflow:hidden"><div id="progress" style="height:100%;background:#0866ff;width:0%"></div></div>
-<small id="progressText">0% full</small>
-</div>
+<div id="signupForm" style="display:none;margin-top:12px">
+<h4 style="text-align:center">Add Member (<span id="count">0</span>/20)</h4>
 <input id="su_name" class="input" placeholder="Full Name">
 <input id="su_email" class="input" type="email" placeholder="Individual Email">
-<input id="su_reg" class="input" placeholder="Reg No: ENS/001/2026">
-<input id="su_pass" class="input" type="password" placeholder="Create Password">
-<button class="btn btn-green" onclick="signup()">Register This Email</button>
-<div style="text-align:center;margin-top:10px"><a href="#" onclick="showLogin()" style="color:#0866ff;font-size:13px">Back to Login</a></div>
-<div id="memberPreview" style="margin-top:12px;max-height:150px;overflow-y:auto"></div>
+<input id="su_reg" class="input" placeholder="Reg No">
+<input id="su_pass" class="input" type="password" placeholder="Password">
+<button class="btn btn-green" onclick="signup()">Register</button>
+<div style="text-align:center;margin-top:8px"><a href="#" onclick="showLogin()" style="color:#0866ff;font-size:13px">Back</a></div>
 </div>
 </div>
 </div>
 
+<!-- MAIN -->
 <div id="mainApp" style="display:none">
 <div class="header">
-<div style="display:flex;align-items:center;gap:8px"><b style="color:#0866ff;font-size:20px">ensCONNECT</b><span class="badge" id="userBadge">-</span><span style="font-size:11px;background:#31a24c;color:#fff;padding:2px 6px;border-radius:10px">● <span id="onlineCount">0</span>/20 Members</span></div>
-<div style="display:flex;gap:8px;align-items:center"><div class="av" id="mainAv">A</div><span onclick="logout()" style="font-size:11px;color:#65676b;cursor:pointer">Logout</span></div>
+<div style="display:flex;align-items:center;gap:8px"><b style="color:#0866ff;font-size:20px">facebook</b><span style="font-size:9px;background:#e7f3ff;color:#0866ff;padding:2px 6px;border-radius:4px" id="userBadge">email</span><span id="dataSaverBadge" style="font-size:9px;background:#00c851;color:#fff;padding:2px 6px;border-radius:4px">🔋 Data Saver ON • 5h offline</span></div>
+<div style="display:flex;gap:6px;align-items:center"><div style="width:32px;height:32px;background:#e4e6eb;border-radius:50%;display:flex;align-items:center;justify-content:center" onclick="startGroupCall()">📹</div><div class="av" id="mainAv">A</div><span onclick="logout()" style="font-size:11px;color:#65676b">Logout</span></div>
 </div>
-<div style="display:flex;gap:8px;padding:8px">
-<button onclick="broadcast20()" style="flex:1;padding:12px;background:#0866ff;color:#fff;border:0;border-radius:6px;font-weight:700;font-size:12px">📧 BROADCAST TO ALL (<span class="bc">0</span>)</button>
-<button onclick="openMembers()" style="flex:1;padding:12px;background:#42b72a;color:#fff;border:0;border-radius:6px;font-weight:700;font-size:12px">👥 VIEW MEMBERS (<span class="bc">0</span>)</button>
+
+<div style="display:flex;gap:6px;padding:8px;flex-wrap:wrap">
+<button onclick="broadcast20()" style="padding:8px 10px;background:#0866ff;color:#fff;border:0;border-radius:6px;font-weight:700;font-size:10px">📧 BROADCAST (<span class="bc">0</span>)</button>
+<button onclick="openMessenger()" style="padding:8px 10px;background:#0084ff;color:#fff;border:0;border-radius:6px;font-weight:700;font-size:10px">💬 EMAIL MESSENGER</button>
+<button onclick="startGroupCall()" style="padding:8px 10px;background:#00c851;color:#fff;border:0;border-radius:6px;font-weight:700;font-size:10px">📹 GROUP CALL</button>
+<button onclick="openAddStory()" style="padding:8px 10px;background:#ff3040;color:#fff;border:0;border-radius:6px;font-weight:700;font-size:10px">➕ STORY</button>
+<button onclick="toggleDataSaver()" style="padding:8px 10px;background:#000;color:#fff;border:0;border-radius:6px;font-weight:700;font-size:10px" id="dsBtn">🔋 Data Saver: ON</button>
 </div>
-<div id="feed" style="max-width:600px;margin:0 auto;padding-bottom:60px"></div>
-<div id="adminPanel" class="card" style="border-left:4px solid #0866ff;display:none">
-<h4>👑 Admin - Manage Up To 20 Emails</h4>
-<div id="adminList" style="margin-top:8px"></div>
-<button onclick="exportEmails()" style="margin-top:8px;padding:8px;background:#e7f3ff;border:0;border-radius:6px;color:#0866ff;font-weight:600;width:100%">📋 Export All Emails</button>
-<button onclick="clearAll()" style="margin-top:6px;padding:8px;background:#ffe7e7;border:0;border-radius:6px;color:#d00;font-weight:600;width:100%">🗑️ Clear All (Reset)</button>
+
+<div class="story-bar" id="storyBar"></div>
+
+<div style="max-width:600px;margin:0 auto;padding-bottom:90px">
+<div class="card" style="display:flex;gap:8px;align-items:center">
+<div class="av" id="feedAv">A</div>
+<div style="flex:1;background:#f0f2f5;padding:10px 14px;border-radius:20px;color:#65676b;font-size:14px" onclick="openCreatePost()">What's on your mind?</div>
+</div>
+<div id="feed"></div>
+</div>
+
+<div class="data-saver"><span>🔋</span><span id="dataText">Data Saver ON • Saved 12MB • Offline cache: 5h</span><span style="background:#00c851;padding:2px 6px;border-radius:10px">●</span></div>
+
+<div style="position:fixed;bottom:0;left:0;right:0;background:#fff;display:flex;justify-content:space-around;padding:6px 0;border-top:1px solid #ddd;z-index:50">
+<div style="flex:1;text-align:center;color:#0866ff">🏠<br><small>Home</small></div>
+<div style="flex:1;text-align:center;color:#65676b" onclick="openMessenger()">💬<br><small>Messenger</small></div>
+<div style="flex:1;text-align:center;color:#65676b" onclick="startGroupCall()">📹<br><small>Call</small></div>
+<div style="flex:1;text-align:center;color:#65676b" onclick="openMembers()">👥<br><small><span class="bc">0</span></small></div>
 </div>
 </div>
 
-<div id="membersModal" style="position:fixed;inset:0;background:#fff;z-index:200;display:none;flex-direction:column">
-<div style="padding:12px;background:#0866ff;color:#fff;display:flex;align-items:center;gap:10px"><span onclick="document.getElementById('membersModal').style.display='none'" style="font-size:22px">←</span><b>👥 ENS Members (<span id="modalCount">0</span>/20 max)</b></div>
-<div id="membersListFull" style="flex:1;overflow-y:auto"></div>
+<!-- EMAIL MESSENGER (OFFLINE CAPABLE) -->
+<div id="messenger" class="messenger">
+<div style="padding:12px;background:#0084ff;color:#fff;display:flex;align-items:center;gap:10px">
+<span onclick="document.getElementById('messenger').style.display='none'" style="font-size:22px">←</span>
+<b>💬 Email Messenger • Offline Capable</b>
+<span id="messengerStatus" style="margin-left:auto;background:#00c851;padding:4px 8px;border-radius:12px;font-size:10px">● Online</span>
+</div>
+<div style="padding:8px;display:flex;gap:6px;background:#f0f2f5">
+<input id="msgSearch" placeholder="Search by email..." style="flex:1;padding:10px;border-radius:20px;border:1px solid #ddd" oninput="renderMessengerList(this.value)">
+<button onclick="broadcast20()" style="padding:10px;background:#0866ff;color:#fff;border:0;border-radius:20px;font-size:11px">📧 Broadcast</button>
+</div>
+<div id="msgList" style="flex:1;overflow-y:auto"></div>
+<div style="padding:8px;background:#fff3cd;border-top:1px solid #ffe69c;font-size:11px;display:none" id="queueInfo">📦 <span id="queueCount">0</span> messages queued offline - Will auto-send via email when online</div>
 </div>
 
-<div id="chatModal" style="position:fixed;inset:0;background:#fff;z-index:300;display:none;flex-direction:column">
-<div style="padding:10px;border-bottom:1px solid #ddd;display:flex;align-items:center;gap:10px"><span onclick="document.getElementById('chatModal').style.display='none'" style="font-size:22px">←</span><div class="av" id="chatAv">A</div><div style="flex:1"><b id="chatName">Name</b><br><small id="chatEmail" style="color:#65676b"></small></div><span style="font-size:20px">📧</span></div>
+<!-- CHAT WINDOW -->
+<div id="chatWin" class="messenger" style="z-index:310">
+<div style="padding:10px;background:#fff;border-bottom:1px solid #ddd;display:flex;align-items:center;gap:10px">
+<span onclick="document.getElementById('chatWin').style.display='none'" style="font-size:22px">←</span>
+<div class="av" id="chatAv">A</div>
+<div style="flex:1"><b id="chatName">Name</b><br><small id="chatEmail" style="color:#65676b">email • 📧 Email + Offline Queue</small></div>
+<div id="chatOnlineDot" style="width:10px;height:10px;background:#00c851;border-radius:50%"></div>
+</div>
 <div id="chatBox" style="flex:1;overflow-y:auto;padding:10px;background:#f0f2f5"></div>
-<div style="padding:8px;display:flex;gap:8px;border-top:1px solid #ddd"><input id="chatInput" placeholder="Message via individual email..." style="flex:1;padding:12px;border-radius:20px;border:1px solid #ddd;background:#f0f2f5" onkeypress="if(event.key==='Enter')sendMsg()"><button onclick="sendMsg()" style="width:44px;height:44px;border-radius:50%;border:0;background:#0866ff;color:#fff">➤</button></div>
+<div style="padding:8px;background:#fff;display:flex;gap:8px;border-top:1px solid #ddd;align-items:center">
+<span style="font-size:20px">😊</span><span style="font-size:20px">📷</span>
+<input id="chatInput" placeholder="Message via email (works offline)..." style="flex:1;padding:12px;border-radius:20px;border:1px solid #ddd;background:#f0f2f5" onkeypress="if(event.key==='Enter')sendEmailMessage()">
+<button onclick="sendEmailMessage()" style="width:44px;height:44px;border-radius:50%;border:0;background:#0084ff;color:#fff">➤</button>
 </div>
+<div style="padding:6px;background:#e7f3ff;text-align:center;font-size:10px;color:#65676b" id="chatFooter">🔋 Data Saver ON • Messages saved locally • Auto-sync via email when online • Offline: 5h remaining</div>
+</div>
+
+<!-- OTHER MODALS (Post, Story, Call, Members) - Simplified -->
+<div id="postModal" class="modal"><div class="modal-box"><div style="display:flex;justify-content:space-between"><b>Create Post</b><span onclick="document.getElementById('postModal').style.display='none'">✕</span></div><textarea id="postText" placeholder="What's on your mind?" style="width:100%;min-height:80px;border:1px solid #ddd;border-radius:8px;padding:10px;margin-top:10px"></textarea><button class="btn btn-blue" onclick="publishPost()" style="margin-top:8px">Post (works offline)</button></div></div>
+<div id="storyModal" class="modal"><div class="modal-box"><div style="display:flex;justify-content:space-between"><b>Add Story</b><span onclick="document.getElementById('storyModal').style.display='none'">✕</span></div><input id="storyText" placeholder="Story text" class="input"><input id="storyImage" placeholder="Image URL" class="input"><button class="btn btn-blue" onclick="publishStory()" style="margin-top:8px">Share Story (cached offline)</button></div></div>
+<div id="callModal" style="position:fixed;inset:0;background:#111;z-index:500;display:none;flex-direction:column"><div style="padding:12px;background:#000;color:#fff;display:flex;justify-content:space-between"><b>📹 Group Call via Email</b><span onclick="endCall()" style="background:#ff3040;padding:6px 12px;border-radius:6px">End ✕</span></div><iframe id="jitsiFrame" style="width:100%;flex:1;border:0" allow="camera; microphone; fullscreen"></iframe><div style="padding:10px;background:#000;text-align:center"><a id="callMailto" href="#" style="padding:10px 20px;background:#0866ff;color:#fff;border-radius:6px;text-decoration:none">📧 Email Invite Link</a></div></div>
+<div id="membersModal" style="position:fixed;inset:0;background:#fff;z-index:200;display:none;flex-direction:column"><div style="padding:12px;background:#0866ff;color:#fff;display:flex;gap:10px"><span onclick="document.getElementById('membersModal').style.display='none'" style="font-size:22px">←</span><b>Members (<span id="modalCount">0</span>/20)</b></div><div id="membersListFull" style="flex:1;overflow-y:auto"></div></div>
+<div id="storyView" style="position:fixed;inset:0;background:#000;z-index:400;display:none;flex-direction:column"><div style="padding:12px;display:flex;justify-content:space-between;color:#fff"><span id="svName">Story</span><span onclick="document.getElementById('storyView').style.display='none'" style="font-size:28px">✕</span></div><img id="svImage" style="width:100%;flex:1;object-fit:contain"><div id="svText" style="position:absolute;bottom:80px;left:0;right:0;text-align:center;color:#fff;font-size:20px;padding:20px"></div></div>
 
 <script>
-const MAX = 20;
-let users = JSON.parse(localStorage.getItem('ens_20_users')|| localStorage.getItem('ens_14_users') || '[]');
-if(users.length==0){
- users=[{name:'Amos Wairene',email:'amoswairene37@gmail.com',reg:'ENS/001/2026',pass:'123456',role:'admin'}];
-}
+const MAX=20;
+let users=JSON.parse(localStorage.getItem('ens_20_users')||localStorage.getItem('ens_14_users')||'[]');
+if(users.length==0)users=[{name:'Amos Wairene',email:'amoswairene37@gmail.com',reg:'ENS/001/2026',pass:'123456',role:'admin'}];
 localStorage.setItem('ens_20_users',JSON.stringify(users));
-let currentUser = JSON.parse(localStorage.getItem('ens_20_current')||localStorage.getItem('ens_14_current')||'null');
-if(currentUser) showMain();
-
-function updateCount(){
- let c=users.length;
- document.getElementById('count')&&(document.getElementById('count').innerText=c);
- document.getElementById('countTop')&&(document.getElementById('countTop').innerText=c);
- document.getElementById('remaining')&&(document.getElementById('remaining').innerText=MAX-c);
- document.getElementById('onlineCount')&&(document.getElementById('onlineCount').innerText=c);
- document.getElementById('modalCount')&&(document.getElementById('modalCount').innerText=c);
- document.querySelectorAll('.bc').forEach(e=>e.innerText=c);
- let prog=document.getElementById('progress');
- if(prog){ prog.style.width=(c/MAX*100)+'%'; document.getElementById('progressText').innerText=Math.round(c/MAX*100)+'% full ('+c+'/'+MAX+')'; }
- renderPreview();
-}
-function showSignup(){document.getElementById('loginForm').style.display='none';document.getElementById('signupForm').style.display='block';updateCount();}
-function showLogin(){document.getElementById('signupForm').style.display='none';document.getElementById('loginForm').style.display='block';updateCount();}
-function renderPreview(){
- let p=document.getElementById('memberPreview');
- if(!p) return;
- p.innerHTML='<b>Registered '+users.length+'/'+MAX+':</b><br><small>'+users.map(u=>`• ${u.name} - ${u.email}`).join('<br>')+'</small>';
-}
-function signup(){
- let name=document.getElementById('su_name').value.trim();
- let email=document.getElementById('su_email').value.trim().toLowerCase();
- let reg=document.getElementById('su_reg').value.trim();
- let pass=document.getElementById('su_pass').value.trim();
- if(!name||!email||!pass) return alert('Fill name, email, password');
- if(!email.includes('@')) return alert('Valid email required');
- if(users.length>=MAX) return alert('MAX '+MAX+' members reached! Cannot add more. Remove one first.');
- if(users.find(u=>u.email==email)) return alert('This email already registered!');
- users.push({name,email,reg,pass,role:users.length==0?'admin':'member'});
- localStorage.setItem('ens_20_users',JSON.stringify(users));
- alert('✅ Member added! '+name+'\n'+email+'\nNow '+users.length+'/'+MAX);
- document.getElementById('su_name').value='';document.getElementById('su_email').value='';document.getElementById('su_reg').value='';document.getElementById('su_pass').value='';
- updateCount();
-}
-function login(){
- let email=document.getElementById('email').value.trim().toLowerCase();
- let pass=document.getElementById('password').value.trim();
- if(!email||!pass) return alert('Enter email + password');
- let u=users.find(x=>x.email==email && x.pass==pass);
- if(!u) return alert('Wrong email/password. Check members list.');
- localStorage.setItem('ens_20_current',JSON.stringify(u));
- currentUser=u;
- showMain();
-}
-function showMain(){
- currentUser=JSON.parse(localStorage.getItem('ens_20_current'));
- document.getElementById('loginPage').style.display='none';
- document.getElementById('mainApp').style.display='block';
- document.getElementById('userBadge').innerText=currentUser.email;
- document.getElementById('mainAv').innerText=currentUser.name[0].toUpperCase();
- let feed=document.getElementById('feed');
- feed.innerHTML=`
-  <div class="card"><div style="display:flex;gap:10px"><div class="av" style="background:#31a24c">${currentUser.name[0]}</div><div><b>${currentUser.name}</b> ${currentUser.role=='admin'?'<span style="background:#0866ff;color:#fff;font-size:9px;padding:1px 4px;border-radius:3px">ADMIN</span>':''}<br><small style="color:#65676b">📧 ${currentUser.email} • ${currentUser.reg||''}</small></div></div><div style="margin-top:8px">✅ Individual email login successful!</div></div>
-  <div class="card" style="background:#e7f3ff"><b>📧 System: ${users.length}/${MAX} Members</b><br><small>Each student uses individual email. Max ${MAX} allowed. Currently ${users.length} registered, ${MAX-users.length} slots remaining.</small></div>
- `;
- if(currentUser.role=='admin' || users[0].email==currentUser.email){
-  document.getElementById('adminPanel').style.display='block';
-  renderAdmin();
- }
- updateCount();
-}
-function renderAdmin(){
- let list=document.getElementById('adminList');
- list.innerHTML=users.map((u,i)=>`<div style="display:flex;gap:8px;padding:8px 0;border-bottom:1px solid #eee;align-items:center"><div class="av" style="width:32px;height:32px;font-size:12px">${u.name[0]}</div><div style="flex:1"><b style="font-size:13px">${u.name}</b> ${u.role=='admin'?'<span style="background:#0866ff;color:#fff;font-size:9px;padding:1px 4px;border-radius:3px">ADMIN</span>':''}<br><small style="font-size:11px;color:#65676b">📧 ${u.email}<br>Reg: ${u.reg||'-'}</small></div><button onclick="removeUser(${i})" style="padding:4px 8px;background:#ffe7e7;border:0;border-radius:4px;color:#d00;font-size:11px">Remove</button></div>`).join('');
-}
-function removeUser(i){ if(!confirm('Remove '+users[i].email+'?')) return; users.splice(i,1); localStorage.setItem('ens_20_users',JSON.stringify(users)); renderAdmin(); updateCount(); }
-function logout(){localStorage.removeItem('ens_20_current');location.reload();}
-function forgot(){ let email=prompt('Enter your individual email:'); if(!email) return; let u=users.find(x=>x.email==email.toLowerCase()); if(!u) return alert('Email not found in '+users.length+' members'); alert('📧 Password for '+email+' is: '+u.pass); }
-function openMembers(){
- document.getElementById('membersModal').style.display='flex';
- let list=document.getElementById('membersListFull');
- list.innerHTML=users.map(u=>`<div style="display:flex;gap:10px;padding:12px;border-bottom:1px solid #eee;align-items:center" onclick="openChat('${u.name.replace(/'/g,"")}','${u.email}')"><div class="av">${u.name[0]}</div><div style="flex:1"><b>${u.name}</b> ${u.email==currentUser.email?'(You)':''}<br><small style="color:#65676b">📧 ${u.email}</small><br><small style="color:#31a24c">● Individual • ${u.reg||''}</small></div><div style="color:#0866ff">📧</div></div>`).join('')+`<div style="padding:16px;text-align:center;color:#65676b;font-size:12px">${users.length}/${MAX} members • ${MAX-users.length} slots left • Each with individual email</div>`;
-}
-let currentChatEmail='';
-function openChat(name,email){ currentChatEmail=email; document.getElementById('chatModal').style.display='flex'; document.getElementById('chatName').innerText=name; document.getElementById('chatEmail').innerText=email; document.getElementById('chatAv').innerText=name[0]; document.getElementById('chatBox').innerHTML=`<div style="text-align:center;padding:20px;color:#65676b"><div style="font-size:30px">📧</div><small>Chat with ${name}<br>${email}</small></div>`; }
-function sendMsg(){ let input=document.getElementById('chatInput'); let text=input.value.trim(); if(!text) return; let box=document.getElementById('chatBox'); let d=document.createElement('div'); d.style.cssText='background:#0084ff;color:#fff;padding:10px 14px;border-radius:18px;max-width:70%;margin:6px 0 6px auto;font-size:14px'; d.innerHTML=text+`<br><small style="font-size:10px;opacity:0.8">📧 To ${currentChatEmail} • ✓</small>`; box.appendChild(d); box.scrollTop=9999; input.value=''; }
-function broadcast20(){
- let text=prompt(`📧 BROADCAST TO ALL ${users.length} INDIVIDUAL EMAILS (Max ${MAX}):\n\n${users.map(u=>u.email).join('\n')}\n\nMessage:`,'ENS 2026: Meeting tomorrow 9am');
- if(!text) return;
- let emails=users.map(u=>u.email).join(',');
- let mailto=`mailto:${emails}?subject=ENS 2026 Broadcast&body=${encodeURIComponent(text)}`;
- let feed=document.getElementById('feed');
- let div=document.createElement('div'); div.className='card'; div.style.borderLeft='4px solid #0866ff';
- div.innerHTML=`<div><b>📢 Broadcast to ${users.length} emails</b><br><small>From: ${currentUser.email}</small></div><div style="margin-top:8px">${text}</div><div style="margin-top:8px;background:#e7f3ff;padding:8px;border-radius:6px;font-size:11px">📧 To: ${users.map(u=>u.email).join(', ')}<br><a href="${mailto}" style="color:#0866ff">Open Gmail</a></div>`;
- feed.prepend(div);
- if(confirm(`✅ Posted!\nSend email to ${users.length} members?`)) window.open(mailto,'_blank');
-}
-function exportEmails(){ let t=users.map(u=>`${u.name},${u.email},${u.reg||''}`).join('\n'); prompt('Copy all emails:',t); }
-function clearAll(){ if(confirm('Clear all '+users.length+' members? This will reset to 0/20')){ users=[]; localStorage.setItem('ens_20_users',JSON.stringify(users)); renderAdmin(); updateCount(); location.reload(); } }
-updateCount();
-</script>
-</body></html>
+let stories=JSON.parse(local
