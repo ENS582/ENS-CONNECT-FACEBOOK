@@ -14,11 +14,14 @@ body{background:#f0f2f5}
 .btn-login{width:100%;background:#1877f2;color:white;border:none;padding:14px;border-radius:8px;font-weight:900;font-size:18px;cursor:pointer}
 .header{background:white;padding:8px 12px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 1px 3px rgba(0,0,0,.15);position:sticky;top:0}
 .badge.on{background:#22c55e;color:white;padding:5px 10px;border-radius:12px;font-weight:900;font-size:10px}.badge.off{background:#ef4444;color:white;padding:5px 10px;border-radius:12px;font-weight:900;font-size:10px}
-.avatar{width:40px;height:40px;background:#1877f2;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900}
+.avatar{width:40px;height:40px;background:#1877f2;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;overflow:hidden;background-size:cover;background-position:center}
+.avatar img{width:100%;height:100%;object-fit:cover}
 .fb-profile{background:white;margin-bottom:10px}
 .cover{height:140px;background:linear-gradient(135deg,#1877f2,#42b72a);position:relative}
-.profile-pic{width:100px;height:100px;border-radius:50%;border:5px solid white;background:#1877f2;color:white;display:flex;align-items:center;justify-content:center;font-size:36px;font-weight:900;position:absolute;bottom:-50px;left:50%;transform:translateX(-50%)}
-.profile-info{text-align:center;padding:60px 10px 15px}
+.profile-pic{width:110px;height:110px;border-radius:50%;border:5px solid white;background:#1877f2;color:white;display:flex;align-items:center;justify-content:center;font-size:36px;font-weight:900;position:absolute;bottom:-55px;left:50%;transform:translateX(-50%);overflow:hidden;cursor:pointer;background-size:cover;background-position:center}
+.profile-pic img{width:100%;height:100%;object-fit:cover}
+.profile-pic:after{content:"📷";position:absolute;bottom:2px;right:2px;background:rgba(0,0,0,.6);color:white;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px}
+.profile-info{text-align:center;padding:65px 10px 15px}
 .menu{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:10px;background:white}
 .menu button{border:none;padding:14px;border-radius:12px;color:white;font-weight:900;cursor:pointer}
 .blue{background:#1877f2}.green{background:#22c55e}.red{background:#ef4444}.black{background:#111}
@@ -35,6 +38,13 @@ body{background:#f0f2f5}
 .msg-me{background:#1877f2;color:white;margin-left:auto}.msg-other{background:white;margin-right:auto}
 .msg-input-row{display:flex;gap:8px;padding:10px;background:white;border-top:1px solid #ddd}
 .msg-input-row input{flex:1;padding:12px;border-radius:20px;border:none;background:#f0f2f5}
+.call-window{position:fixed;inset:0;background:#111;z-index:10000;display:flex;flex-direction:column;transform:translateY(100%);transition:.3s}
+.call-window.open{transform:translateY(0)}
+.video-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;flex:1;padding:6px;overflow:auto;background:#000}
+.video-grid video{width:100%;height:160px;background:#222;border-radius:12px;object-fit:cover}
+.call-controls{display:flex;justify-content:center;gap:12px;padding:14px;background:#000}
+.call-btn{width:56px;height:56px;border-radius:50%;border:none;font-size:22px;font-weight:900;cursor:pointer}
+.call-end{background:#ef4444;color:white}.call-mic{background:#333;color:white}.call-cam{background:#333;color:white}
 </style>
 </head>
 <body>
@@ -45,7 +55,7 @@ body{background:#f0f2f5}
     <input id="emailInput" type="email" placeholder="Email address" value="nyongesaamos417@gmail.com">
     <input id="passInput" type="password" placeholder="Password">
     <button type="button" class="btn-login" onclick="doLogin()">Log in</button>
-    <div style="text-align:center;margin-top:10px;font-size:11px;color:#22c55e">✅ Touch fixed • Tap 3 dots → Open in Chrome if not touching</div>
+    <div style="text-align:center;margin-top:10px;font-size:11px;color:#22c55e">✅ Touch • Sync • Firebase • Profile Photo OK</div>
   </div>
 </div>
 
@@ -54,134 +64,40 @@ body{background:#f0f2f5}
     <div style="display:flex;align-items:center;gap:8px"><b style="color:#1877f2">ENS CONNECT</b><span id="cloudBadge" class="badge off">● Connecting...</span></div>
     <div style="display:flex;gap:8px;align-items:center"><div class="avatar" id="avatarSmall">A</div><button type="button" onclick="doLogout()" style="border:2px solid #ef4444;color:#ef4444;background:white;padding:6px 12px;border-radius:8px;font-weight:900">Logout</button></div>
   </div>
-  <div class="fb-profile"><div class="cover"><div class="profile-pic" id="profilePic">A</div></div><div class="profile-info"><h2 id="profileName">User</h2><p id="profileSub">Welcome</p></div></div>
+  <div class="fb-profile">
+    <div class="cover"><div class="profile-pic" id="profilePic" onclick="uploadPhoto()">A</div></div>
+    <div class="profile-info">
+      <h2 id="profileName">User</h2>
+      <p id="profileSub">Welcome</p>
+      <p><button type="button" onclick="uploadPhoto()" style="background:#e7f3ff;color:#1877f2;border:none;padding:6px 14px;border-radius:20px;font-weight:900;margin-top:8px">📷 Change Profile Photo</button></p>
+    </div>
+  </div>
   <div class="menu">
     <button type="button" class="blue" onclick="openMessenger()">💬 Messenger ☁️</button>
-    <button type="button" class="green" onclick="alert('Group Call - Cloud ON')">📹 Group Call</button>
+    <button type="button" class="green" onclick="startGroupCall()">📹 Group Call ☁️</button>
     <button type="button" class="red" onclick="document.getElementById('postInput').focus()">➕ Story</button>
     <button type="button" class="black" onclick="alert('Broadcast - Cloud ON')">📢 Broadcast</button>
   </div>
   <div id="cloudBar" class="cloud-bar off">☁️ Connecting...</div>
-  <div class="input-row"><div class="avatar" id="avatar2" style="width:34px;height:34px">A</div><input id="postInput" placeholder="What's on your mind?"><button type="button" onclick="doPost()" style="background:#1877f2;color:white;border:none;padding:10px 14px;border-radius:20px;font-weight:900">Post</button></div>
+  <div class="input-row"><div class="avatar" id="avatar2">A</div><input id="postInput" placeholder="What's on your mind?"><button type="button" onclick="doPost()" style="background:#1877f2;color:white;border:none;padding:10px 14px;border-radius:20px;font-weight:900">Post</button></div>
   <div id="feed"></div>
 </div>
 
 <div id="messengerWindow" class="messenger-window">
-  <div class="msg-header"><div><b>💬 Messenger</b><br><small>Real-time • Sound ON • Delete X</small></div><button type="button" onclick="closeMessenger()" style="background:white;color:#1877f2;border:none;width:30px;height:30px;border-radius:50%;font-weight:900">X</button></div>
+  <div class="msg-header"><div><b>💬 Messenger</b><br><small>Real-time • Sound • Delete</small></div><button type="button" onclick="closeMessenger()" style="background:white;color:#1877f2;border:none;width:30px;height:30px;border-radius:50%;font-weight:900">X</button></div>
   <div id="msgList" class="msg-list"></div>
   <div class="msg-input-row"><input id="msgInput" placeholder="Type message..."><button type="button" onclick="sendMsg()" style="background:#1877f2;color:white;border:none;padding:12px 16px;border-radius:20px;font-weight:900">Send</button></div>
 </div>
-<audio id="msgSound" src="https://cdn.pixabay.com/download/audio/2021/08/04/audio_0625c8f5b2.mp3"></audio>
 
-<!-- LOGIN SCRIPT FIRST - ALWAYS TOUCHES EVEN IF FACEBOOK BLOCKS FIREBASE -->
-<script>
-function getName(email){
-  if(!email) return "User";
-  let n=email.split('@')[0].replace(/[._0-9]/g,' ').trim();
-  return n.split(' ').map(w=>w.charAt(0).toUpperCase()+w.slice(1)).join(' ') || "User";
-}
-function checkLogin(){
-  const logged=localStorage.getItem('ens_logged_in');
-  const email=localStorage.getItem('ens_email')||"";
-  if(logged==='true' && email){
-    const name=getName(email);
-    document.getElementById('loginScreen').classList.add('hidden');
-    document.getElementById('mainApp').classList.remove('hidden');
-    document.getElementById('profileName').textContent=name;
-    document.getElementById('profileSub').textContent='Welcome back, '+name;
-    document.getElementById('profilePic').textContent=name.charAt(0).toUpperCase();
-    document.getElementById('avatarSmall').textContent=name.charAt(0).toUpperCase();
-    document.getElementById('avatar2').textContent=name.charAt(0).toUpperCase();
-  } else {
-    document.getElementById('loginScreen').classList.remove('hidden');
-    document.getElementById('mainApp').classList.add('hidden');
-  }
-}
-checkLogin();
-function doLogin(){
-  const email=document.getElementById('emailInput').value.trim();
-  const pass=document.getElementById('passInput').value.trim();
-  if(!email){alert('Enter email');return;}
-  if(!pass){alert('Enter password');return;}
-  localStorage.setItem('ens_logged_in','true');
-  localStorage.setItem('ens_email',email);
-  checkLogin();
-  alert('Logged in as '+email+' - Touching works! Now Cloud connecting...');
-}
-function doLogout(){
-  if(!confirm('Logout?')) return;
-  localStorage.removeItem('ens_logged_in');
-  checkLogin();
-}
-function openMessenger(){document.getElementById('messengerWindow').classList.add('open');}
-function closeMessenger(){document.getElementById('messengerWindow').classList.remove('open');}
-</script>
-
-<!-- FIREBASE SECOND - YOUR ORIGINAL CONFIG -->
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
-<script>
-const firebaseConfig = {
-  apiKey: "AIzaSyB19__OdQ6gHWW-Wmari2jMVZfa-P5qe0E",
-  authDomain: "ens-connect-2026-e563b.firebaseapp.com",
-  databaseURL: "https://ens-connect-2026-e563b-default-rtdb.firebaseio.com",
-  projectId: "ens-connect-2026-e563b",
-  storageBucket: "ens-connect-2026-e563b.firebasestorage.app",
-  messagingSenderId: "382030495866",
-  appId: "1:382030495866:web:5c42bf76bff50623ed3bc3",
-  measurementId: "G-8YGL4R38LD"
-};
-try{
-  firebase.initializeApp(firebaseConfig);
-  const db=firebase.database();
-  db.ref('.info/connected').on('value', snap=>{
-    const badge=document.getElementById('cloudBadge');
-    const bar=document.getElementById('cloudBar');
-    if(snap.val()===true){
-      if(badge){badge.textContent='● Cloud Sync ON - Fast!';badge.className='badge on';}
-      if(bar){bar.textContent='☁️ CLOUD ON • Well connected • Sync OK • Touch OK!';bar.className='cloud-bar on';}
-    }
-  });
-  const postsRef=db.ref('ens_posts');
-  postsRef.limitToLast(50).on('child_added', snap=>{
-    const data=snap.val(); if(!data) return;
-    const feed=document.getElementById('feed');
-    const name=getName(data.email);
-    const d=document.createElement('div'); d.className='post';
-    d.innerHTML=`<b>${name}</b> <small style="color:#22c55e">☁️ Cloud</small><br>${data.text}<br><small style="color:gray">${new Date(data.time).toLocaleString()}</small>`;
-    feed.prepend(d);
-  });
-  window.doPost=function(){
-    const input=document.getElementById('postInput');
-    const text=input.value.trim(); if(!text) return;
-    const email=localStorage.getItem('ens_email')||'anon@gmail.com';
-    postsRef.push({text,email,time:Date.now()}); input.value='';
-  };
-  const chatRef=db.ref('ens_messenger_chats');
-  let first=true;
-  chatRef.limitToLast(100).on('child_added', snap=>{
-    const m=snap.val(); const id=snap.key; if(!m) return;
-    const myEmail=localStorage.getItem('ens_email')||'';
-    const isMe=m.email===myEmail;
-    const name=getName(m.email);
-    const list=document.getElementById('msgList');
-    const div=document.createElement('div');
-    div.className='msg-bubble '+(isMe?'msg-me':'msg-other'); div.id='msg-'+id;
-    div.innerHTML=`${!isMe?`<small style="font-weight:900;color:#1877f2">${name}</small><br>` : ''}${m.text}<br><small style="opacity:.6;font-size:10px">${new Date(m.time).toLocaleTimeString()}</small> ${isMe?`<button onclick="deleteMsg('${id}')" style="background:#ef4444;color:white;border:none;border-radius:50%;width:18px;height:18px;margin-left:8px">×</button>`:''}`;
-    list.appendChild(div); list.scrollTop=list.scrollHeight;
-    if(!first &&!isMe){ try{document.getElementById('msgSound').play();}catch(e){} }
-  });
-  setTimeout(()=>first=false,2000);
-  chatRef.on('child_removed', snap=>{
-    const el=document.getElementById('msg-'+snap.key); if(el) el.remove();
-  });
-  window.deleteMsg=function(id){ if(confirm('Delete chat?')) db.ref('ens_messenger_chats/'+id).remove(); };
-  window.sendMsg=function(){
-    const input=document.getElementById('msgInput'); const text=input.value.trim(); if(!text) return;
-    const email=localStorage.getItem('ens_email')||'anon@gmail.com';
-    chatRef.push({text,email,time:Date.now()}); input.value='';
-  };
-}catch(e){ console.log('Firebase blocked by Facebook browser - Login still works', e); }
-</script>
-</body>
-  </html>
+<div id="callWindow" class="call-window">
+  <div style="background:#1877f2;color:white;padding:12px;display:flex;justify-content:space-between;align-items:center">
+    <div><b>📹 Group Call • <span id="callCount">0</span> joined</b><br><small id="callStatus">Allow camera</small></div>
+    <button type="button" onclick="leaveCall()" style="background:white;color:#ef4444;border:none;padding:8px 14px;border-radius:20px;font-weight:900">Leave</button>
+  </div>
+  <div id="videoGrid" class="video-grid"></div>
+  <div class="call-controls">
+    <button id="micBtn" class="call-btn call-mic" onclick="toggleMic()">🎤</button>
+    <button id="camBtn" class="call-btn call-cam" onclick="toggleCam()">📹</button>
+    <button class="call-btn call-end" onclick="leaveCall()">☎️</button>
+  </div>
+</div>
