@@ -2,39 +2,52 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <title>ENS CONNECT</title>
 <style>
-*{box-sizing:border-box;margin:0;font-family:Arial}
-body{background:#f0f2f5}
+*{box-sizing:border-box;margin:0;font-family:Arial;-webkit-tap-highlight-color:transparent}
+body{background:#f0f2f5;touch-action:manipulation}
 .login-screen{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#f0f2f5;padding:20px}
 .fb-logo{color:#1877f2;font-size:44px;font-weight:900}
 .login-box{background:white;padding:20px;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,.15);width:100%;max-width:400px;margin-top:20px}
 .login-box input{width:100%;padding:14px;border:1px solid #dddfe2;border-radius:8px;margin-bottom:12px;font-size:16px}
-.btn-login{width:100%;background:#1877f2;color:white;border:none;padding:14px;border-radius:8px;font-weight:900;font-size:18px}
+.btn-login{width:100%;background:#1877f2;color:white;border:none;padding:14px;border-radius:8px;font-weight:900;font-size:18px;touch-action:manipulation}
+.btn-login:active{transform:scale(.97)}
 .header{background:white;padding:8px 12px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 1px 3px rgba(0,0,0,.15);position:sticky;top:0;z-index:999}
 .logo{font-weight:900;color:#1877f2;font-size:20px}
 .badge{padding:5px 10px;border-radius:12px;color:white;font-weight:900;font-size:10px}
-.badge.on{background:#22c55e}.badge.off{background:#ef4444}
+.badge.on{background:#22c55e;animation:blink 1s infinite}.badge.off{background:#ef4444}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.6}}
 .avatar{width:40px;height:40px;background:#1877f2;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900}
-.btn-logout{border:2px solid #ef4444;color:#ef4444;background:white;padding:7px 14px;border-radius:8px;font-weight:900;font-size:12px}
+.btn-logout{border:2px solid #ef4444;color:#ef4444;background:white;padding:7px 14px;border-radius:8px;font-weight:900;font-size:12px;touch-action:manipulation}
+.btn-logout:active{transform:scale(.93)}
 .fb-profile{background:white;margin-bottom:10px;box-shadow:0 1px 2px rgba(0,0,0,.1)}
 .cover{height:150px;background:linear-gradient(135deg,#1877f2,#42b72a);position:relative}
 .profile-pic{width:110px;height:110px;border-radius:50%;border:5px solid white;background:#1877f2;color:white;display:flex;align-items:center;justify-content:center;font-size:40px;font-weight:900;position:absolute;bottom:-55px;left:50%;transform:translateX(-50%)}
 .profile-info{text-align:center;padding:65px 10px 15px}
-.profile-info h2{font-size:22px}
-.profile-info p{color:gray;font-size:13px;margin-top:4px}
 .menu{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:10px;background:white}
-.menu button{border:none;padding:14px;border-radius:12px;color:white;font-weight:900;font-size:13px}
+.menu button{border:none;padding:14px;border-radius:12px;color:white;font-weight:900;font-size:13px;touch-action:manipulation}
+.menu button:active{transform:scale(.93)}
 .blue{background:#1877f2}.green{background:#22c55e}.red{background:#ef4444}.black{background:#111}
 .cloud-bar{color:white;text-align:center;padding:7px;font-weight:900;font-size:11px}
 .cloud-bar.on{background:#16a34a}.cloud-bar.off{background:#ef4444}
-.post{background:white;margin:8px;border-radius:12px;padding:12px}
+.post{background:white;margin:8px;border-radius:12px;padding:12px;box-shadow:0 1px 2px rgba(0,0,0,.1)}
 .input-row{display:flex;gap:8px;padding:10px;background:white;margin:8px;border-radius:12px}
 .input-row input{flex:1;background:#f0f2f5;border:none;padding:11px;border-radius:20px;outline:none}
 .hidden{display:none!important}
+.messenger-window{position:fixed;bottom:0;left:0;right:0;height:85vh;background:white;z-index:9999;border-radius:20px 20px 0 0;box-shadow:0 -5px 20px rgba(0,0,0,.3);display:flex;flex-direction:column;transform:translateY(100%);transition:.3s}
+.messenger-window.open{transform:translateY(0)}
+.msg-header{background:#1877f2;color:white;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;border-radius:20px 20px 0 0}
+.msg-list{flex:1;overflow-y:auto;padding:10px;background:#f0f2f5}
+.msg-bubble{max-width:75%;padding:10px 12px;border-radius:18px;margin:6px 0;position:relative;word-break:break-word;touch-action:manipulation}
+.msg-bubble:active{transform:scale(.97)}
+.msg-me{background:#1877f2;color:white;margin-left:auto;border-bottom-right-radius:4px}
+.msg-other{background:white;margin-right:auto;border-bottom-left-radius:4px;box-shadow:0 1px 2px rgba(0,0,0,.1)}
+.msg-input-row{display:flex;gap:8px;padding:10px;background:white;border-top:1px solid #ddd}
+.msg-input-row input{flex:1;padding:12px;border-radius:20px;border:none;background:#f0f2f5;outline:none}
+.delete-btn{position:absolute;top:-8px;right:-8px;background:#ef4444;color:white;border:none;border-radius:50%;width:22px;height:22px;font-weight:900}
 </style>
-<!-- YOUR FIREBASE CODE - COMPAT FOR 100% CONNECTION -->
+<!-- FIREBASE CODE - WELL CONNECTED -->
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics-compat.js"></script>
@@ -47,133 +60,4 @@ body{background:#f0f2f5}
     <input id="emailInput" type="email" placeholder="Email address">
     <input id="passInput" type="password" placeholder="Password">
     <button class="btn-login" id="loginBtn">Log in</button>
-    <div id="loginStatus" style="text-align:center;margin-top:10px;font-size:11px;color:#22c55e">☁️ Your Firebase Project: ens-connect-2026-e563b</div>
-  </div>
-</div>
-
-<div id="mainApp" class="hidden">
-  <div class="header">
-    <div style="display:flex;align-items:center;gap:8px"><div class="logo">ENS CONNECT</div><span id="cloudBadge" class="badge off">● Connecting...</span></div>
-    <div style="display:flex;gap:8px;align-items:center"><div class="avatar" id="avatarSmall">N</div><button class="btn-logout" id="logoutBtn">Logout</button></div>
-  </div>
-  <div class="fb-profile">
-    <div class="cover"><div class="profile-pic" id="profilePic">N</div></div>
-    <div class="profile-info">
-      <h2 id="profileName">User Name</h2>
-      <p id="profileSub">Welcome to ENS CONNECT</p>
-      <p style="margin-top:8px"><span style="background:#e7f3ff;color:#1877f2;padding:4px 10px;border-radius:12px;font-weight:900;font-size:12px" id="activeBadge">● Active Now</span></p>
-    </div>
-  </div>
-  <div class="menu">
-    <button class="blue" onclick="alert('Messenger - Cloud ON')">💬 Messenger ☁️</button>
-    <button class="green" onclick="alert('Group Call')">🎥 Group Call</button>
-    <button class="red" onclick="document.getElementById('postInput').focus()">➕ Story</button>
-    <button class="black" onclick="alert('Broadcast')">📢 Broadcast</button>
-  </div>
-  <div id="cloudBar" class="cloud-bar off">☁️ Connecting to your Firebase cloud...</div>
-  <div class="input-row"><div class="avatar" id="avatar2" style="width:34px;height:34px">N</div><input id="postInput" placeholder="What's on your mind?"><button id="postBtn" style="background:#1877f2;color:white;border:none;padding:10px 14px;border-radius:20px;font-weight:900">Post</button></div>
-  <div id="feed"></div>
-</div>
-
-<script>
-function getName(email){
-  if(!email) return "User";
-  let n=email.split('@')[0].replace(/[._0-9]/g,' ').trim();
-  return n.split(' ').map(w=>w.charAt(0).toUpperCase()+w.slice(1)).join(' ') || "User";
-}
-function checkLogin(){
-  const logged=localStorage.getItem('ens_logged_in');
-  const email=localStorage.getItem('ens_email')||"";
-  if(logged==='true' && email){
-    const name=getName(email);
-    document.getElementById('loginScreen').classList.add('hidden');
-    document.getElementById('mainApp').classList.remove('hidden');
-    document.getElementById('profileName').textContent=name;
-    document.getElementById('profileSub').textContent='Welcome back, '+name;
-    document.getElementById('profilePic').textContent=name.charAt(0).toUpperCase();
-    document.getElementById('avatarSmall').textContent=name.charAt(0).toUpperCase();
-    document.getElementById('avatar2').textContent=name.charAt(0).toUpperCase();
-    document.getElementById('postInput').placeholder="What's on your mind, "+name.split(' ')[0]+"?";
-  } else {
-    document.getElementById('loginScreen').classList.remove('hidden');
-    document.getElementById('mainApp').classList.add('hidden');
-  }
-}
-checkLogin();
-document.getElementById('loginBtn').onclick=()=>{
-  const email=document.getElementById('emailInput').value.trim();
-  const pass=document.getElementById('passInput').value.trim();
-  if(!email||!pass){alert('Enter email & password'); return;}
-  localStorage.setItem('ens_logged_in','true');
-  localStorage.setItem('ens_email',email);
-  checkLogin();
-  initFirebase();
-};
-document.getElementById('logoutBtn').onclick=()=>{
-  if(!confirm('Logout?')) return;
-  localStorage.removeItem('ens_logged_in');
-  checkLogin();
-};
-
-// YOUR EXACT FIREBASE CONFIG YOU COPIED INITIALLY
-const firebaseConfig = {
-  apiKey: "AIzaSyB19__OdQ6gHWW-Wmari2jMVZfa-P5qe0E",
-  authDomain: "ens-connect-2026-e563b.firebaseapp.com",
-  databaseURL: "https://ens-connect-2026-e563b-default-rtdb.firebaseio.com",
-  projectId: "ens-connect-2026-e563b",
-  storageBucket: "ens-connect-2026-e563b.firebasestorage.app",
-  messagingSenderId: "382030495866",
-  appId: "1:382030495866:web:5c42bf76bff50623ed3bc3",
-  measurementId: "G-8YGL4R38LD"
-};
-
-let db;
-function initFirebase(){
-  if(!firebase.apps.length){
-    firebase.initializeApp(firebaseConfig);
-    try{firebase.analytics();}catch(e){}
-  }
-  db=firebase.database();
-  console.log("Firebase connected with YOUR config:", firebaseConfig.projectId);
-
-  db.ref('.info/connected').on('value', snap=>{
-    const badge=document.getElementById('cloudBadge');
-    const bar=document.getElementById('cloudBar');
-    const active=document.getElementById('activeBadge');
-    if(snap.val()===true){
-      badge.textContent='● Cloud Sync ON - Fast!'; badge.className='badge on';
-      bar.textContent='☁️ CLOUD ON • Well connected to your Firebase • Real-time • Touching!'; bar.className='cloud-bar on';
-      active.textContent='● Active Now • Cloud Connected';
-      console.log("CLOUD CONNECTED - YOUR FIREBASE WORKS");
-    } else {
-      badge.textContent='● Connecting...'; badge.className='badge off';
-      bar.textContent='☁️ Connecting to ens-connect-2026-e563b...'; bar.className='cloud-bar off';
-    }
-  });
-
-  const postsRef=db.ref('ens_posts');
-  document.getElementById('feed').innerHTML='';
-  postsRef.limitToLast(50).on('child_added', snap=>{
-    const data=snap.val();
-    if(!data||!data.text) return;
-    const feed=document.getElementById('feed');
-    const name=getName(data.email);
-    const d=document.createElement('div');
-    d.className='post';
-    d.innerHTML=`<b>${name}</b> <small style="color:#22c55e">☁️ Cloud - Your Firebase</small><br>${data.text}<br><small style="color:gray">${new Date(data.time).toLocaleString()} • Synced to ${firebaseConfig.projectId}</small>`;
-    feed.prepend(d);
-  });
-
-  document.getElementById('postBtn').onclick=()=>{
-    const input=document.getElementById('postInput');
-    const text=input.value.trim();
-    if(!text) return;
-    const email=localStorage.getItem('ens_email')||'anon@gmail.com';
-    postsRef.push({text, email, time:Date.now()});
-    input.value='';
-  };
-}
-initFirebase();
-</script>
-</body>
-</html>
+    <div id="loginStatus" style="text-align:center;margin-top:10px;font-size:11px;color:#22c55e">
